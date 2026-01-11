@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Light - Login</title>
+<style>
+* { margin:0;padding:0;box-sizing:border-box; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh; position: relative; overflow-x: hidden;
+}
+.top-nav {
+    position: fixed; top:0; left:0; right:0;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:1.5rem 3rem;
+    z-index:100;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    border-bottom:1px solid rgba(255,255,255,0.2);
+    animation: slideDown 0.8s ease;
+}
+@keyframes slideDown { from { transform: translateY(-100px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+.school-name { display:flex; align-items:center; gap:1rem; animation:fadeInLeft 1s ease 0.3s backwards; }
+@keyframes fadeInLeft { from { opacity:0; transform:translateX(-50px);} to {opacity:1; transform:translateX(0);} }
+.school-name-icon { font-size:2.5rem; animation:rotate3d 3s infinite ease-in-out; }
+@keyframes rotate3d {0%,100%{transform:rotate(0deg) scale(1);}25%{transform:rotate(10deg) scale(1.1);}50%{transform:rotate(-10deg) scale(1);}75%{transform:rotate(10deg) scale(1.1);}}
+.school-name-text h2 { color:white; font-size:1.6rem; text-shadow:2px 2px 8px rgba(0,0,0,0.3); letter-spacing:2px; font-weight:700; }
+.school-name-text p { color: rgba(255,255,255,0.95); font-size:0.85rem; margin-top:0.3rem; letter-spacing:0.5px; }
+.nav-buttons { display:flex; gap:1rem; animation:fadeInRight 1s ease 0.5s backwards; }
+@keyframes fadeInRight { from { opacity:0; transform:translateX(50px);} to {opacity:1; transform:translateX(0);} }
+.nav-btn { padding:0.8rem 1.8rem; border:2px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color:white; border-radius:50px; cursor:pointer; font-size:1rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; transition: all 0.4s; text-decoration:none; position:relative; overflow:hidden;}
+.nav-btn:hover { background: rgba(255,255,255,0.3); border-color:white; transform:translateY(-5px) scale(1.05); box-shadow:0 15px 35px rgba(0,0,0,0.4);}
+.nav-btn span { position:relative; z-index:1;}
+
+.background { position:fixed; width:100%; height:100%; overflow:hidden; top:0; left:0; z-index:0; }
+.shape { position:absolute; border-radius:50%; filter:blur(80px); opacity:0.5; animation:float 20s infinite ease-in-out; }
+.shape1 { width:300px;height:300px; background:linear-gradient(135deg,#667eea,#764ba2); top:-150px; left:-150px; animation-delay:0s;}
+.shape2 { width:400px;height:400px; background:linear-gradient(135deg,#f093fb,#f5576c); bottom:-200px; right:-200px; animation-delay:4s;}
+.shape3 { width:350px;height:350px; background:linear-gradient(135deg,#4facfe,#00f2fe); top:50%; left:50%; transform:translate(-50%,-50%); animation-delay:2s;}
+@keyframes float {0%,100%{transform:translate(0,0) scale(1);}25%{transform:translate(50px,-50px) scale(1.1);}50%{transform:translate(-30px,50px) scale(0.9);}75%{transform:translate(40px,30px) scale(1.05);}}
+
+.main-content { min-height:100vh; display:flex; justify-content:center; align-items:center; padding-top:6rem; position:relative; z-index:10; }
+.login-container { position:relative; background: rgba(255,255,255,0.15); backdrop-filter:blur(20px); border-radius:30px; padding:3rem; box-shadow:0 20px 60px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.3); width:90%; max-width:450px; animation:slideUp 0.8s ease; }
+@keyframes slideUp { from {opacity:0; transform:translateY(50px);} to {opacity:1; transform:translateY(0);} }
+.logo { text-align:center; margin-bottom:2rem; animation:fadeIn 1s ease 0.3s backwards; }
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+.logo-icon { font-size:4rem; animation:bounce 2s infinite; }
+@keyframes bounce {0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);} }
+.logo h1 { color:white; font-size:2rem; margin-top:0.5rem; text-shadow:2px 2px 4px rgba(0,0,0,0.3);}
+.logo p { color:rgba(255,255,255,0.9); font-size:0.9rem; margin-top:0.3rem; }
+
+.tab-switcher { display:flex; gap:1rem; margin-bottom:2rem; background: rgba(255,255,255,0.1); padding:0.5rem; border-radius:50px; }
+.tab-btn { flex:1; padding:0.8rem; border:none; background:transparent; color:rgba(255,255,255,0.7); font-size:1rem; font-weight:600; cursor:pointer; border-radius:50px; transition: all 0.3s ease; }
+.tab-btn.active { background:white; color:#667eea; box-shadow:0 5px 20px rgba(0,0,0,0.2); transform:scale(1.05); }
+.tab-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color:white; }
+
+.form-group { margin-bottom:1.5rem; position:relative; }
+.form-group label { display:block; color:white; font-weight:500; margin-bottom:0.5rem; font-size:0.9rem; }
+.input-wrapper { position:relative; }
+.input-icon { position:absolute; left:1rem; top:50%; transform:translateY(-50%); font-size:1.2rem; color:rgba(102,126,234,0.7); }
+.form-group input { width:100%; padding:1rem 1rem 1rem 3rem; border:2px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.9); border-radius:15px; font-size:1rem; transition: all 0.3s; color:#333; }
+.form-group input:focus { outline:none; border-color:white; background:white; box-shadow:0 5px 20px rgba(255,255,255,0.3); }
+
+.alert { padding:1rem; border-radius:10px; margin-bottom:1.5rem; display:none; }
+.alert.show { display:block; }
+.alert-error { background:#fee; border:2px solid #dc3545; color:#c82333; }
+.alert-success { background:#efe; border:2px solid #28a745; color:#218838; }
+
+.submit-btn { width:100%; padding:1rem; border:none; background:white; color:#667eea; font-size:1.1rem; font-weight:700; border-radius:15px; cursor:pointer; transition:all 0.3s; text-transform:uppercase; letter-spacing:1px; position:relative; overflow:hidden; }
+.submit-btn:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+.submit-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+.spinner { width:20px; height:20px; border:3px solid rgba(102,126,234,0.3); border-top-color:#667eea; border-radius:50%; animation:spin 1s linear infinite; display:inline-block; margin-right:10px;}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.register-link { text-align:center; margin-top:1.5rem; color:white; font-size:0.9rem; }
+.register-link a { color:white; text-decoration:none; font-weight:700; border-bottom:2px solid white; transition:all 0.3s; }
+.register-link a:hover { text-shadow:0 0 10px rgba(255,255,255,0.8); letter-spacing:1px; }
+
+@media (max-width:768px) {
+    .top-nav { padding:1rem 1.5rem; flex-direction:column; gap:1rem; }
+    .school-name { flex-direction:column; text-align:center; gap:0.5rem; }
+    .school-name-text h2 { font-size:1.2rem; }
+    .main-content { padding-top:12rem; }
+    .login-container { padding:2rem; margin:1rem; }
+}
+</style>
+</head>
+<body>
+<div class="top-nav">
+    <div class="school-name">
+        <div class="school-name-icon">🎓</div>
+        <div class="school-name-text">
+            <h2>STAR LIGHT PUBLIC ENGLISH SCHOOL</h2>
+            <p>Gandhi Chawk Road, Barigarh - Chhatarpur, M.P. 471510</p>
+        </div>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="window.history.back()"><span>← Back</span></button>
+        <button class="nav-btn" onclick="window.location.href='/'"><span>🏠 Home</span></button>
+    </div>
+</div>
+
+<div class="background">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <div class="shape shape3"></div>
+</div>
+
+<div class="main-content">
+<div class="login-container">
+    <div class="logo">
+        <div class="logo-icon">🎓</div>
+        <h1>STAR LIGHT</h1>
+        <p>BARIGARH</p>
+    </div>
+    
+    <div class="tab-switcher">
+        <button class="tab-btn active" onclick="switchTab('student', event)">👨‍🎓 Student</button>
+        <button class="tab-btn" onclick="switchTab('staff', event)">👨‍🏫 Staff</button>
+        <button class="tab-btn" onclick="switchTab('admin', event)">👨‍💼 Admin</button>
+    </div>
+    
+    <div class="alert alert-error" id="alertBox"></div>
+    
+    <form class="login-form" onsubmit="return handleLogin(event)">
+        <div class="form-group">
+            <label id="usernameLabel">Student ID / Email</label>
+            <div class="input-wrapper">
+                <input type="text" id="username" placeholder="Enter your ID or email" required autocomplete="username">
+                <div class="input-icon">👤</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                <div class="input-icon">🔒</div>
+            </div>
+        </div>
+        <button class="submit-btn" type="submit" id="submitBtn">
+            <span id="btnText">Login</span>
+        </button>
+    </form>
+    
+    <div class="register-link">Don't have an account? <a href="registration.html">Register</a></div>
+</div>
+</div>
+
+<script>
+let currentTab = 'student';
+
+function switchTab(tab, event) {
+    currentTab = tab;
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const usernameLabel = document.getElementById('usernameLabel');
+    const username = document.getElementById('username');
+    
+    if(tab === 'student'){
+        usernameLabel.textContent = 'Student ID / Email';
+        username.placeholder = 'Enter your ID or email';
+    } else if(tab === 'staff'){
+        usernameLabel.textContent = 'Staff ID / Email';
+        username.placeholder = 'Enter your staff ID or email';
+    } else {
+        usernameLabel.textContent = 'Admin Username / Email';
+        username.placeholder = 'Enter admin username or email';
+    }
+}
+
+function showAlert(message, type = 'error') {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.textContent = message;
+    alertBox.className = `alert alert-${type} show`;
+    setTimeout(() => alertBox.classList.remove('show'), 5000);
+}
+
+async function handleLogin(e){
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+
+    // Clear any previous alerts
+    document.getElementById('alertBox').classList.remove('show');
+    
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    btnText.innerHTML = '<div class="spinner"></div> Logging in...';
+
+    try {
+        console.log('🔐 Attempting login...', { username, role: currentTab });
+        
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                role: currentTab
+            })
+        });
+
+        console.log('📡 Response status:', res.status);
+        
+        const data = await res.json();
+        console.log('📦 Response data:', data);
+
+        if (data.success && data.token) {
+            // Store authentication data
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userRole', data.user.role);
+            localStorage.setItem('userId', data.user.id);
+            localStorage.setItem('userName', data.user.username);
+            
+            console.log('✅ Login successful! Token saved.');
+            
+            showAlert('Login successful! Redirecting...', 'success');
+            
+            // Redirect based on role after 1 second
+            setTimeout(() => {
+                if (data.user.role === 'admin') {
+                    window.location.href = '/admin-review.html';
+                } else if (data.user.role === 'student') {
+                    window.location.href = '/student-dashboard.html';
+                } else if (data.user.role === 'staff') {
+                    window.location.href = '/staff-dashboard.html';
+                } else {
+                    window.location.href = '/dashboard.html';
+                }
+            }, 1000);
+            
+        } else {
+            // Login failed
+            const errorMsg = data.msg || data.message || 'Invalid credentials. Please try again.';
+            console.error('❌ Login failed:', errorMsg);
+            showAlert(errorMsg, 'error');
+            
+            submitBtn.disabled = false;
+            btnText.textContent = 'Login';
+        }
+        
+    } catch (err) {
+        console.error('💥 Login error:', err);
+        showAlert('Server error. Please try again later.', 'error');
+        
+        submitBtn.disabled = false;
+        btnText.textContent = 'Login';
+    }
+}
+</script>
+</body>
+</html>

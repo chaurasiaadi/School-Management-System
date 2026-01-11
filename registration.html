@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Light - Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .school-name {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: fadeInLeft 1s ease 0.3s backwards;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .school-name-icon {
+            font-size: 2.5rem;
+            animation: rotate3d 3s infinite ease-in-out;
+        }
+
+        @keyframes rotate3d {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                transform: rotate(10deg) scale(1.1);
+            }
+            50% {
+                transform: rotate(-10deg) scale(1);
+            }
+            75% {
+                transform: rotate(10deg) scale(1.1);
+            }
+        }
+
+        .school-name-text h2 {
+            color: white;
+            font-size: 1.6rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .school-name-text p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInRight 1s ease 0.5s backwards;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .nav-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-btn-icon {
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .back-btn:hover .nav-btn-icon {
+            transform: translateX(-8px) scale(1.2);
+        }
+
+        .home-btn:hover .nav-btn-icon {
+            transform: rotate(360deg) scale(1.2);
+        }
+
+        /* Animated Background */
+        .background {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .shape2 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: 4s;
+        }
+
+        .shape3 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+            50% {
+                transform: translate(-30px, 50px) scale(0.9);
+            }
+            75% {
+                transform: translate(40px, 30px) scale(1.05);
+            }
+        }
+
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: rise 15s infinite ease-in;
+        }
+
+        @keyframes rise {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1);
+            }
+        }
+
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8rem 1rem 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .registration-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 90%;
+            max-width: 950px;
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease 0.3s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .logo-icon {
+            font-size: 4rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 2rem;
+            margin-top: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .tab-switcher {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: 50px;
+            animation: fadeIn 1s ease 0.5s backwards;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .registration-form {
+            animation: fadeIn 1s ease 0.7s backwards;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group label .required {
+            color: #ffeb3b;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: rgba(102, 126, 234, 0.7);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            color: #333;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: white;
+            background: white;
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-group input:focus ~ .input-icon,
+        .form-group select:focus ~ .input-icon,
+        .form-group textarea:focus ~ .input-icon {
+            color: #667eea;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-weight: 500;
+        }
+
+        .file-upload-label:hover {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .file-name {
+            margin-top: 0.5rem;
+            color: white;
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            background: white;
+            color: #667eea;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:hover::before {
+            width: 500px;
+            height: 500px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .submit-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-message, .error-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 3rem 4rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .success-message.show, .error-message.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            animation: successBounce 0.6s ease;
+        }
+
+        @keyframes successBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .error-icon {
+            font-size: 5rem;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .success-message h2 {
+            color: #667eea;
+            margin: 1rem 0;
+            font-size: 2rem;
+        }
+
+        .error-message h2 {
+            color: #dc3545;
+            margin: 1rem 0;
+            font-size: 2rem;
+        }
+
+        .success-message p, .error-message p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .credentials-box {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+            animation: slideInUp 0.5s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .credentials-box.show {
+            display: block;
+        }
+
+        .credentials-box h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .credentials-content {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .credential-row {
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .credential-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .credential-row strong {
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .credential-value {
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .credentials-note {
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .credentials-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cred-btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cred-btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .cred-btn-secondary {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cred-btn-close {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .cred-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .cred-btn:active {
+            transform: translateY(0);
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .school-name {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .school-name-text h2 {
+                font-size: 1.2rem;
+            }
+
+            .school-name-text p {
+                font-size: 0.75rem;
+            }
+
+            .school-name-icon {
+                font-size: 2rem;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-btn {
+                padding: 0.7rem 1.3rem;
+                font-size: 0.9rem;
+            }
+
+            .registration-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo-icon {
+                font-size: 3rem;
+            }
+
+            .success-message, .error-message {
+                padding: 2rem;
+            }
+
+            .success-message h2, .error-message h2 {
+                font-size: 1.5rem;
+            }
+
+            .credentials-actions {
+                flex-direction: column;
+            }
+
+            .cred-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <div class="school-name">
+            <div class="school-name-icon">🎓</div>
+            <div class="school-name-text">
+                <h2>STAR LIGHT PUBLIC ENGLISH SCHOOL</h2>
+                <p>Gandhi Chawk Road, Barigarh - Chhatarpur, M.P. 471510</p>
+            </div>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn back-btn" onclick="goBack()">
+                <span class="nav-btn-icon">←</span>
+                <span>Back</span>
+            </button>
+            <button class="nav-btn home-btn" onclick="goBack()">
+                <span class="nav-btn-icon">🏠</span>
+                <span>Home</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="background">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="main-content">
+        <div class="registration-container">
+            <div class="logo">
+                <div class="logo-icon">🎓</div>
+                <h1>STAR LIGHT PUBLIC ENGLISH SCHOOL</h1>
+                <p>Registration Portal</p>
+            </div>
+
+            <div class="tab-switcher">
+                <button class="tab-btn active" onclick="switchTab('student', event)">
+                    👨‍🎓 Student Registration
+                </button>
+                <button class="tab-btn" onclick="switchTab('staff', event)">
+                    👨‍🏫 Staff Registration
+                </button>
+            </div>
+
+            <!-- STUDENT REGISTRATION FORM -->
+            <form id="studentForm" class="registration-form" onsubmit="submitForm(event, 'student')">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="fullName" placeholder="Enter full name" required>
+                            <div class="input-icon">👤</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Father's Name <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="fatherName" placeholder="Enter father's name" required>
+                            <div class="input-icon">👨</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mother's Name <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="motherName" placeholder="Enter mother's name" required>
+                            <div class="input-icon">👩</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <select name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="input-icon">⚥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date of Birth <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="date" name="dateOfBirth" required>
+                            <div class="input-icon">📅</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Class <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="class" placeholder="Enter class (e.g., 1st, 10th)" required>
+                            <div class="input-icon">📚</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Medium <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <select name="medium" required>
+                                <option value="">Select Medium</option>
+                                <option value="english">English</option>
+                                <option value="hindi">Hindi</option>
+                            </select>
+                            <div class="input-icon">🗣️</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="tel" name="contactNumber" placeholder="Enter 10-digit mobile" pattern="[0-9]{10}" required>
+                            <div class="input-icon">📱</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="email" name="email" placeholder="Enter email address" required>
+                            <div class="input-icon">✉️</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Aadhar Number <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="aadharNumber" placeholder="Enter 12-digit Aadhar" pattern="[0-9]{12}" maxlength="12" required>
+                            <div class="input-icon">🆔</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Address <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <textarea name="address" placeholder="Enter complete address" required></textarea>
+                            <div class="input-icon">📍</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Person with Disability <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <select name="disability" required>
+                                <option value="">Select Option</option>
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                            <div class="input-icon">♿</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Photo <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="photo" id="studentPhoto" accept="image/jpeg,image/jpg,image/png" required onchange="showFileName(this, 'studentPhotoName')">
+                            <label for="studentPhoto" class="file-upload-label">
+                                <span>📷</span>
+                                <span>Choose Photo (JPG/PNG)</span>
+                            </label>
+                            <div class="file-name" id="studentPhotoName"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Previous Year Marksheet <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="marksheet" id="studentMarksheet" accept=".pdf,image/jpeg,image/jpg,image/png" required onchange="showFileName(this, 'studentMarksheetName')">
+                            <label for="studentMarksheet" class="file-upload-label">
+                                <span>📄</span>
+                                <span>Upload Marksheet (PDF/JPG/PNG)</span>
+                            </label>
+                            <div class="file-name" id="studentMarksheetName"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>Submit Registration</span>
+                </button>
+            </form>
+
+            <!-- STAFF REGISTRATION FORM -->
+            <form id="staffForm" class="registration-form" style="display: none;" onsubmit="submitForm(event, 'staff')">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="fullName" placeholder="Enter full name" required>
+                            <div class="input-icon">👤</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Father's Name <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="fatherName" placeholder="Enter father's name" required>
+                            <div class="input-icon">👨</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Marital Status <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <select name="maritalStatus" required>
+                                <option value="">Select Status</option>
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                                <option value="divorced">Divorced</option>
+                                <option value="widowed">Widowed</option>
+                            </select>
+                            <div class="input-icon">💑</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="tel" name="contactNumber" placeholder="Enter 10-digit mobile" pattern="[0-9]{10}" required>
+                            <div class="input-icon">📱</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="email" name="email" placeholder="Enter email address" required>
+                            <div class="input-icon">✉️</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Aadhar Number <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="aadharNumber" placeholder="Enter 12-digit Aadhar" pattern="[0-9]{12}" maxlength="12" required>
+                            <div class="input-icon">🆔</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Highest Qualification <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="highestQualification" placeholder="e.g., B.A., M.A., Ph.D." required>
+                            <div class="input-icon">🎓</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Main Subject <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="mainSubject" placeholder="Enter main subject" required>
+                            <div class="input-icon">📖</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>B.Ed <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <select name="hasBEd" required>
+                                <option value="">Select Option</option>
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                            <div class="input-icon">📚</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>D.Ed <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <select name="hasDEd" required>
+                                <option value="">Select Option</option>
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                            <div class="input-icon">📚</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date of Birth <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="date" name="dateOfBirth" required>
+                            <div class="input-icon">📅</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>12th Passing Subject <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" name="twelfthPassingSubject" placeholder="e.g., Math, Biology, Arts" required>
+                            <div class="input-icon">📝</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Upload Photo <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="photo" id="staffPhoto" accept="image/jpeg,image/jpg,image/png" required onchange="showFileName(this, 'staffPhotoName')">
+                            <label for="staffPhoto" class="file-upload-label">
+                                <span>📷</span>
+                                <span>Choose Photo (JPG/PNG)</span>
+                            </label>
+                            <div class="file-name" id="staffPhotoName"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>12th Marksheet <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="twelfthMarksheet" id="staff12thMarksheet" accept=".pdf,image/jpeg,image/jpg,image/png" required onchange="showFileName(this, 'staff12thMarksheetName')">
+                            <label for="staff12thMarksheet" class="file-upload-label">
+                                <span>📄</span>
+                                <span>Upload Marksheet</span>
+                            </label>
+                            <div class="file-name" id="staff12thMarksheetName"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Highest Qualification Marksheet <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="qualificationMarksheet" id="staffQualificationMarksheet" accept=".pdf,image/jpeg,image/jpg,image/png" required onchange="showFileName(this, 'staffQualificationMarksheetName')">
+                            <label for="staffQualificationMarksheet" class="file-upload-label">
+                                <span>📄</span>
+                                <span>Upload Qualification Marksheet</span>
+                            </label>
+                            <div class="file-name" id="staffQualificationMarksheetName"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>Submit Registration</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeSuccessMessage()"></div>
+
+    <!-- Success Message with Credentials -->
+    <div class="success-message" id="successMessage">
+        <div class="success-icon">✅</div>
+        <h2>Registration Successful!</h2>
+        <p id="successText">Your registration has been submitted successfully.</p>
+        
+        <div class="credentials-box" id="credentialsBox">
+            <h3>📋 Your Login Credentials</h3>
+            <div class="credentials-content">
+                <div class="credential-row">
+                    <strong>User ID:</strong> 
+                    <span class="credential-value" id="displayUserId"></span>
+                </div>
+                <div class="credential-row">
+                    <strong>Password:</strong> 
+                    <span class="credential-value" id="displayPassword"></span>
+                </div>
+            </div>
+            <p class="credentials-note">
+                <span>⚠️</span>
+                <span>Please save these credentials carefully. You'll need them to login.</span>
+            </p>
+            <div class="credentials-actions">
+                <button onclick="printCredentials()" class="cred-btn cred-btn-primary">
+                    🖨️ Print
+                </button>
+                <button onclick="copyCredentials(event)" class="cred-btn cred-btn-secondary">
+                    📋 Copy
+                </button>
+                <button onclick="closeSuccessMessage()" class="cred-btn cred-btn-close">
+                    ✓ Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage">
+        <div class="error-icon">❌</div>
+        <h2>Registration Failed!</h2>
+        <p id="errorText">Something went wrong. Please try again.</p>
+    </div>
+
+    <script>
+        let currentTab = 'student';
+        let currentCredentials = { userId: '', password: '' };
+
+        // Create background particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Navigation functions
+        function goBack() {
+            window.history.back();
+        }
+
+        function goHome() {
+            // Change this URL to your home/dashboard page
+            window.location.href = 'dashboard.html';
+        }
+
+        // Tab switching
+        function switchTab(tab, event) {
+            currentTab = tab;
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const studentForm = document.getElementById('studentForm');
+            const staffForm = document.getElementById('staffForm');
+
+            if (tab === 'student') {
+                studentForm.style.display = 'block';
+                staffForm.style.display = 'none';
+            } else {
+                studentForm.style.display = 'none';
+                staffForm.style.display = 'block';
+            }
+
+            const activeForm = tab === 'student' ? studentForm : staffForm;
+            activeForm.style.animation = 'none';
+            setTimeout(() => {
+                activeForm.style.animation = 'fadeIn 0.5s ease';
+            }, 10);
+        }
+
+        // Show selected file name
+        function showFileName(input, targetId) {
+            const fileName = input.files[0]?.name;
+            const fileNameElement = document.getElementById(targetId);
+            if (fileName) {
+                fileNameElement.textContent = `✓ ${fileName}`;
+                fileNameElement.style.color = '#4CAF50';
+            }
+        }
+
+        // MAIN FORM SUBMISSION FUNCTION
+        async function submitForm(event, type) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            
+            // Disable button and show loading
+            submitBtn.innerHTML = '<div class="spinner"></div>';
+            submitBtn.disabled = true;
+
+            try {
+                // Collect form data with FormData API (handles files automatically)
+                const formData = new FormData(form);
+
+                // Store credentials for display
+                const userId = formData.get('contactNumber');
+                const password = formData.get('dateOfBirth');
+                currentCredentials = { userId, password };
+
+                // Determine the API endpoint based on registration type
+                const endpoint = type === 'student' ? '/api/register-student' : '/api/register-staff';
+
+                // Make API call to backend
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData // Send as multipart/form-data for file uploads
+                });
+
+                const data = await response.json();
+
+                // Handle response
+                if (data.success) {
+                    // Show success message with credentials
+                    const successMessage = document.getElementById('successMessage');
+                    const modalOverlay = document.getElementById('modalOverlay');
+                    
+                    document.getElementById('successText').textContent = data.msg || 'Registration submitted successfully!';
+                    
+                    // Display credentials
+                    document.getElementById('displayUserId').textContent = userId;
+                    document.getElementById('displayPassword').textContent = password;
+                    document.getElementById('credentialsBox').classList.add('show');
+                    
+                    successMessage.classList.add('show');
+                    modalOverlay.classList.add('show');
+
+                    console.log('✅ Registration successful:', data);
+                    console.log('📋 Credentials - User ID:', userId, '| Password:', password);
+                } else {
+                    // Show error message
+                    const errorMessage = document.getElementById('errorMessage');
+                    const errorText = data.msg || data.errors?.map(e => e.msg).join(', ') || 'Registration failed. Please check your information.';
+                    document.getElementById('errorText').textContent = errorText;
+                    errorMessage.classList.add('show');
+
+                    setTimeout(() => {
+                        errorMessage.classList.remove('show');
+                    }, 5000);
+
+                    console.error('❌ Registration error:', data);
+                }
+            } catch (error) {
+                // Network or server error
+                console.error('❌ Network error:', error);
+                
+                const errorMessage = document.getElementById('errorMessage');
+                document.getElementById('errorText').textContent = 'Network error. Please check your connection and try again.';
+                errorMessage.classList.add('show');
+
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 5000);
+            } finally {
+                // Re-enable button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Print credentials
+        function printCredentials() {
+            const userId = currentCredentials.userId;
+            const password = currentCredentials.password;
+            const registrationType = currentTab === 'student' ? 'Student' : 'Staff';
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Login Credentials - Star Light School</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            padding: 40px;
+                            max-width: 600px;
+                            margin: 0 auto;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                            border-bottom: 3px solid #667eea;
+                            padding-bottom: 20px;
+                        }
+                        .header h1 {
+                            color: #667eea;
+                            margin-bottom: 10px;
+                        }
+                        .header p {
+                            color: #666;
+                            font-size: 14px;
+                        }
+                        .registration-type {
+                            text-align: center;
+                            background: #f5f5f5;
+                            padding: 10px;
+                            border-radius: 5px;
+                            margin-bottom: 20px;
+                            font-weight: bold;
+                            color: #667eea;
+                        }
+                        .credentials {
+                            background: #f5f5f5;
+                            padding: 30px;
+                            border-radius: 10px;
+                            margin: 20px 0;
+                            border: 2px solid #667eea;
+                        }
+                        .credential-row {
+                            margin: 20px 0;
+                            font-size: 18px;
+                        }
+                        .credential-row strong {
+                            display: inline-block;
+                            width: 150px;
+                            color: #333;
+                        }
+                        .credential-value {
+                            font-family: 'Courier New', monospace;
+                            font-size: 22px;
+                            color: #667eea;
+                            font-weight: bold;
+                            background: white;
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                            display: inline-block;
+                        }
+                        .note {
+                            margin-top: 30px;
+                            padding: 15px;
+                            background: #fff3cd;
+                            border-left: 4px solid #ffc107;
+                            font-size: 14px;
+                            line-height: 1.6;
+                        }
+                        .note strong {
+                            color: #856404;
+                        }
+                        .footer {
+                            margin-top: 40px;
+                            text-align: center;
+                            color: #666;
+                            font-size: 12px;
+                            border-top: 1px solid #ddd;
+                            padding-top: 20px;
+                        }
+                        @media print {
+                            body { padding: 20px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🎓 STAR LIGHT PUBLIC ENGLISH SCHOOL</h1>
+                        <p>Gandhi Chawk Road, Barigarh - Chhatarpur, M.P. 471510</p>
+                    </div>
+                    <div class="registration-type">
+                        ${registrationType} Registration
+                    </div>
+                    <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">Login Credentials</h2>
+                    <div class="credentials">
+                        <div class="credential-row">
+                            <strong>User ID:</strong>
+                            <span class="credential-value">${userId}</span>
+                        </div>
+                        <div class="credential-row">
+                            <strong>Password:</strong>
+                            <span class="credential-value">${password}</span>
+                        </div>
+                    </div>
+                    <div class="note">
+                        <strong>⚠️ Important Instructions:</strong>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Keep these credentials safe and secure</li>
+                            <li>Use these credentials to login to your account</li>
+                            <li>Do not share your credentials with anyone</li>
+                            <li>If you forget your credentials, contact the school administration</li>
+                        </ul>
+                    </div>
+                    <div class="footer">
+                        <p><strong>Date of Issue:</strong> ${new Date().toLocaleDateString('en-IN', { 
+                            day: '2-digit', 
+                            month: 'long', 
+                            year: 'numeric' 
+                        })}</p>
+                        <p style="margin-top: 10px;">This is a computer-generated document and does not require a signature.</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            
+            // Auto-print after content loads
+            setTimeout(() => {
+                printWindow.print();
+            }, 250);
+        }
+
+        // Copy credentials to clipboard
+        function copyCredentials(event) {
+            const userId = currentCredentials.userId;
+            const password = currentCredentials.password;
+            const registrationType = currentTab === 'student' ? 'Student' : 'Staff';
+            
+            const text = `🎓 STAR LIGHT PUBLIC ENGLISH SCHOOL
+${registrationType} Registration - Login Credentials
+
+User ID: ${userId}
+Password: ${password}
+
+⚠️ Please keep these credentials safe and secure.
+You will need them to access your account.`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // Show feedback
+                const btn = event.target.closest('.cred-btn');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '✓ Copied!';
+                btn.style.background = '#4CAF50';
+                btn.style.color = 'white';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy. Please try again or copy manually.');
+                console.error('Copy error:', err);
+            });
+        }
+
+        // Close success message and reset form
+        function closeSuccessMessage() {
+            const successMessage = document.getElementById('successMessage');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const credentialsBox = document.getElementById('credentialsBox');
+            
+            successMessage.classList.remove('show');
+            modalOverlay.classList.remove('show');
+            credentialsBox.classList.remove('show');
+            
+            // Reset the active form
+            setTimeout(() => {
+                const form = currentTab === 'student' ? document.getElementById('studentForm') : document.getElementById('staffForm');
+                form.reset();
+                document.querySelectorAll('.file-name').forEach(el => el.textContent = '');
+                currentCredentials = { userId: '', password: '' };
+            }, 500);
+        }
+
+        // Input focus animations
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transition = 'transform 0.3s ease';
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Scroll animation observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.form-group').forEach(group => {
+            group.style.opacity = '0';
+            group.style.transform = 'translateY(20px)';
+            group.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(group);
+        });
+    </script>
+</body>
+</html>

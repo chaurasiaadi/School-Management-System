@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Dashboard - Star Light School</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.top-nav {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.nav-brand h1 {
+    color: #11998e;
+    font-size: 1.5rem;
+}
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    color: white;
+}
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+.logout-btn {
+    padding: 0.6rem 1.5rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.logout-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+/* Main Container */
+.container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* Welcome Section */
+.welcome-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.welcome-text h2 {
+    color: #11998e;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+.welcome-text p {
+    color: #666;
+    font-size: 1rem;
+}
+.welcome-icon {
+    font-size: 5rem;
+    animation: wave 2s infinite;
+}
+@keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-15deg); }
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.stat-icon {
+    font-size: 3rem;
+    padding: 1rem;
+    border-radius: 15px;
+}
+.stat-info h3 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+}
+.stat-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.quick-actions h2 {
+    color: #11998e;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.action-btn {
+    padding: 1.5rem;
+    border: 2px solid #e0e0e0;
+    background: linear-gradient(135deg, #f5f7fa, #ffffff);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+}
+.action-btn:hover {
+    border-color: #11998e;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(17, 153, 142, 0.3);
+}
+.action-btn-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+.action-btn-text {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Profile Section */
+.profile-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.profile-section h2 {
+    color: #11998e;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+.profile-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #11998e;
+}
+.profile-item label {
+    display: block;
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+.profile-item .value {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+}
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Classes Section */
+.classes-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.classes-section h2 {
+    color: #11998e;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.class-card {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f5f7fa, #ffffff);
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #11998e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+}
+.class-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.class-info h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+.class-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+.class-meta {
+    text-align: right;
+}
+.class-time {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.class-students {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Schedule Section */
+.schedule-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.schedule-section h2 {
+    color: #11998e;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.schedule-table th {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+.schedule-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+.schedule-table tr:hover {
+    background: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .top-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .welcome-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .class-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    .class-meta {
+        text-align: center;
+        margin-top: 1rem;
+    }
+}
+
+/* Loading Spinner */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #11998e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Alert Messages */
+.alert {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-brand">
+        <span style="font-size: 2rem;">👨‍🏫</span>
+        <h1>Star Light School - Staff Portal</h1>
+    </div>
+    <div class="nav-user">
+        <div class="user-info">
+            <div class="user-avatar">👨‍🏫</div>
+            <div>
+                <div style="font-weight: 600;" id="userName">Loading...</div>
+                <div style="font-size: 0.85rem; opacity: 0.9;">Staff Member</div>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="welcome-text">
+            <h2>Welcome, <span id="welcomeName">Teacher</span>! 👋</h2>
+            <p>Ready to inspire young minds today?</p>
+        </div>
+        <div class="welcome-icon">👨‍🏫</div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;">📚</div>
+            <div class="stat-info">
+                <h3 id="statSubject">Loading...</h3>
+                <p>Main Subject</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f3e5f5; color: #9c27b0;">🎓</div>
+            <div class="stat-info">
+                <h3 id="statQualification">Loading...</h3>
+                <p>Qualification</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;">✅</div>
+            <div class="stat-info">
+                <h3 id="statStatus">Loading...</h3>
+                <p>Employment Status</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fff3e0; color: #ff9800;">📋</div>
+            <div class="stat-info">
+                <h3 id="statBEd">Loading...</h3>
+                <p>B.Ed Status</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>⚡ Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="#" class="action-btn" onclick="viewProfile(); return false;">
+                <div class="action-btn-icon">👤</div>
+                <div class="action-btn-text">My Profile</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewAttendance(); return false;">
+                <div class="action-btn-icon">📊</div>
+                <div class="action-btn-text">Mark Attendance</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewStudents(); return false;">
+                <div class="action-btn-icon">👥</div>
+                <div class="action-btn-text">My Students</div>
+            </a>
+            <a href="#" class="action-btn" onclick="uploadMarks(); return false;">
+                <div class="action-btn-icon">📝</div>
+                <div class="action-btn-text">Upload Marks</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewTimetable(); return false;">
+                <div class="action-btn-icon">🕐</div>
+                <div class="action-btn-text">My Timetable</div>
+            </a>
+            <a href="#" class="action-btn" onclick="assignHomework(); return false;">
+                <div class="action-btn-icon">📚</div>
+                <div class="action-btn-text">Assign Homework</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewSalary(); return false;">
+                <div class="action-btn-icon">💰</div>
+                <div class="action-btn-text">Salary Details</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewLeave(); return false;">
+                <div class="action-btn-icon">🏖️</div>
+                <div class="action-btn-text">Apply Leave</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="profile-section">
+        <h2>📋 My Information</h2>
+        <div class="profile-grid" id="profileGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Classes -->
+    <div class="classes-section">
+        <h2>📅 Today's Classes</h2>
+        <div id="classesContainer">
+            <div class="alert alert-info">
+                Class schedule feature will be available once your registration is approved.
+            </div>
+        </div>
+    </div>
+
+    <!-- Weekly Schedule -->
+    <div class="schedule-section">
+        <h2>📆 Weekly Schedule</h2>
+        <div class="alert alert-info">
+            Weekly schedule will be available once your registration is approved and classes are assigned.
+        </div>
+    </div>
+</div>
+
+<script>
+// API Base URL - Change this to your backend URL
+const API_BASE_URL = 'http://localhost:5000/api';
+
+// Check authentication
+function checkAuth() {
+    const token = localStorage.getItem('authToken');
+    const role = localStorage.getItem('userRole');
+    
+    if (!token || role !== 'staff') {
+        alert('Please login as staff to access this page');
+        window.location.href = '/';
+        return false;
+    }
+    return true;
+}
+
+// Logout function
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+        window.location.href = '/';
+    }
+}
+
+// Helper function to format date
+function formatDate(dateString) {
+    if (!dateString) return 'Not Available';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+
+// Helper function to get status badge HTML
+function getStatusBadge(status) {
+    const statusClass = {
+        'pending': 'status-pending',
+        'approved': 'status-approved',
+        'rejected': 'status-rejected'
+    };
+    
+    const statusText = {
+        'pending': 'Under Review',
+        'approved': 'Approved',
+        'rejected': 'Rejected'
+    };
+    
+    return `<span class="status-badge ${statusClass[status] || 'status-pending'}">${statusText[status] || status}</span>`;
+}
+
+// Load staff data from backend
+async function loadStaffData() {
+    const token = localStorage.getItem('authToken');
+    
+    // Initially show loading
+    document.getElementById('userName').textContent = 'Loading...';
+    document.getElementById('welcomeName').textContent = 'Loading...';
+    
+    try {
+        // Fetch staff profile with registration details
+        const profileRes = await fetch(`${API_BASE_URL}/staff/my-profile`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!profileRes.ok) {
+            throw new Error('Failed to fetch profile data');
+        }
+        
+        const profileData = await profileRes.json();
+        console.log('Profile data:', profileData);
+        
+        if (profileData.success && profileData.registration) {
+            // Update header with actual user data
+            document.getElementById('userName').textContent = profileData.user.username || 'Staff';
+            document.getElementById('welcomeName').textContent = profileData.registration.fullName || profileData.user.username || 'Teacher';
+            
+            displayStaffData(profileData.user, profileData.registration);
+        } else {
+            // Update header even if no registration
+            document.getElementById('userName').textContent = profileData.user?.username || 'Staff';
+            document.getElementById('welcomeName').textContent = profileData.user?.username || 'Teacher';
+            
+            displayNoRegistration();
+        }
+        
+    } catch (err) {
+        console.error('Error loading data:', err);
+        
+        // Set username from localStorage as fallback
+        const fallbackUser = localStorage.getItem('userName');
+        if (fallbackUser) {
+            document.getElementById('userName').textContent = fallbackUser;
+            document.getElementById('welcomeName').textContent = fallbackUser;
+        }
+        
+        displayError(err.message);
+    }
+}
+
+// Display staff data on dashboard
+function displayStaffData(user, registration) {
+    // Update stats cards
+    document.getElementById('statSubject').textContent = registration.mainSubject || 'Not Set';
+    document.getElementById('statQualification').textContent = registration.highestQualification || 'Not Set';
+    document.getElementById('statStatus').textContent = registration.status ? registration.status.charAt(0).toUpperCase() + registration.status.slice(1) : 'Pending';
+    document.getElementById('statBEd').textContent = registration.hasBEd === 'yes' ? 'Yes' : 'No';
+    
+    // Build profile grid
+    const profileGrid = document.getElementById('profileGrid');
+    profileGrid.innerHTML = `
+        <div class="profile-item">
+            <label>Full Name</label>
+            <div class="value">${registration.fullName || 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Father's Name</label>
+            <div class="value">${registration.fatherName || 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Contact Number</label>
+            <div class="value">${registration.contactNumber || 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Email</label>
+            <div class="value">${registration.email || user.email || 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Date of Birth</label>
+            <div class="value">${formatDate(registration.dateOfBirth)}</div>
+        </div>
+        <div class="profile-item">
+            <label>Marital Status</label>
+            <div class="value">${registration.maritalStatus ? registration.maritalStatus.charAt(0).toUpperCase() + registration.maritalStatus.slice(1) : 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Main Subject</label>
+            <div class="value">${registration.mainSubject || 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Highest Qualification</label>
+            <div class="value">${registration.highestQualification || 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>12th Passing Subject</label>
+            <div class="value">${registration.twelfthPassingSubject || 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>B.Ed</label>
+            <div class="value">${registration.hasBEd === 'yes' ? 'Yes' : 'No'}</div>
+        </div>
+        <div class="profile-item">
+            <label>D.Ed</label>
+            <div class="value">${registration.hasDEd === 'yes' ? 'Yes' : 'No'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Employment Status</label>
+            <div class="value">${getStatusBadge(registration.status)}</div>
+        </div>
+        <div class="profile-item">
+            <label>Aadhar Number</label>
+            <div class="value">${registration.aadharNumber ? '***' + registration.aadharNumber.slice(-4) : 'Not Available'}</div>
+        </div>
+        <div class="profile-item">
+            <label>Registration Date</label>
+            <div class="value">${formatDate(registration.createdAt)}</div>
+        </div>
+    `;
+    
+    // Show appropriate message based on approval status
+    updateClassesSection(registration.status);
+}
+
+// Update classes section based on approval status
+function updateClassesSection(status) {
+    const classesContainer = document.getElementById('classesContainer');
+    
+    if (status === 'approved') {
+        classesContainer.innerHTML = `
+            <div class="alert alert-info">
+                Your class schedule will be assigned by the administration soon.
+            </div>
+        `;
+    } else if (status === 'rejected') {
+        classesContainer.innerHTML = `
+            <div class="alert alert-error">
+                Your registration has been rejected. Please contact administration for more details.
+            </div>
+        `;
+    } else {
+        classesContainer.innerHTML = `
+            <div class="alert alert-info">
+                Class schedule will be available once your registration is approved.
+            </div>
+        `;
+    }
+}
+
+// Display when no registration found
+function displayNoRegistration() {
+    document.getElementById('statSubject').textContent = 'N/A';
+    document.getElementById('statQualification').textContent = 'N/A';
+    document.getElementById('statStatus').textContent = 'Not Registered';
+    document.getElementById('statBEd').textContent = 'N/A';
+    
+    const profileGrid = document.getElementById('profileGrid');
+    profileGrid.innerHTML = `
+        <div class="alert alert-error">
+            No registration found. Please complete your staff registration first.
+        </div>
+    `;
+}
+
+// Display error message
+function displayError(message) {
+    document.getElementById('statSubject').textContent = 'Error';
+    document.getElementById('statQualification').textContent = 'Error';
+    document.getElementById('statStatus').textContent = 'Error';
+    document.getElementById('statBEd').textContent = 'Error';
+    
+    const profileGrid = document.getElementById('profileGrid');
+    profileGrid.innerHTML = `
+        <div class="alert alert-error">
+            Error loading data: ${message}. Please refresh the page or contact support.
+        </div>
+    `;
+}
+
+// Quick action functions
+function viewProfile() {
+    alert('📋 Detailed profile editing feature coming soon!');
+}
+
+function viewAttendance() {
+    alert('📊 Mark student attendance feature coming soon!');
+}
+
+function viewStudents() {
+    alert('👥 View and manage students feature coming soon!');
+}
+
+function uploadMarks() {
+    alert('📝 Upload exam marks feature coming soon!');
+}
+
+function viewTimetable() {
+    alert('🕐 View personal timetable feature coming soon!');
+}
+
+function assignHomework() {
+    alert('📚 Assign homework to students feature coming soon!');
+}
+
+function viewSalary() {
+    alert('💰 View salary details and slips feature coming soon!');
+}
+
+function viewLeave() {
+    alert('🏖️ Apply for leave feature coming soon!');
+}
+
+// Initialize on page load
+if (checkAuth()) {
+    loadStaffData();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard - Star Light School</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.top-nav {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.nav-brand h1 {
+    color: #667eea;
+    font-size: 1.5rem;
+}
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    color: white;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    overflow: hidden;
+    border: 2px solid white;
+}
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.logout-btn {
+    padding: 0.6rem 1.5rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.logout-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+/* Main Container */
+.container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* Welcome Section */
+.welcome-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.welcome-text h2 {
+    color: #667eea;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+.welcome-text p {
+    color: #666;
+    font-size: 1rem;
+}
+.welcome-icon {
+    font-size: 5rem;
+    animation: wave 2s infinite;
+}
+@keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-15deg); }
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.stat-icon {
+    font-size: 3rem;
+    padding: 1rem;
+    border-radius: 15px;
+}
+.stat-info h3 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+}
+.stat-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.quick-actions h2 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.action-btn {
+    padding: 1.5rem;
+    border: 2px solid #e0e0e0;
+    background: linear-gradient(135deg, #f5f7fa, #ffffff);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+}
+.action-btn:hover {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+.action-btn-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+.action-btn-text {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Profile Section */
+.profile-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.profile-section h2 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+/* Profile Header with Photo */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+.profile-photo-container {
+    flex-shrink: 0;
+}
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.profile-photo-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid white;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.profile-header-info h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+.profile-header-info p {
+    opacity: 0.9;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+.profile-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+.profile-item label {
+    display: block;
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+.profile-item .value {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+}
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Events Section */
+.events-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.events-section h2 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.event-card {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #667eea;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.event-info h4 {
+    color: #333;
+    margin-bottom: 0.3rem;
+}
+.event-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+.event-date {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 80px;
+}
+.event-date .day {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.event-date .month {
+    font-size: 0.85rem;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .top-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .welcome-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Loading Spinner */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-brand">
+        <span style="font-size: 2rem;">🎓</span>
+        <div>
+            <h1>Star Light Public English School</h1>
+            <p style="font-size: 0.75rem; color: #666; margin-top: 0.2rem;">Gandhi Chawk Road, Barigarh - Chhatarpur, M.P. 471510</p>
+        </div>
+    </div>
+    <div class="nav-user">
+        <div class="user-info">
+            <div class="user-avatar" id="navAvatar">
+                👤
+            </div>
+            <div>
+                <div style="font-weight: 600;" id="userName">Loading...</div>
+                <div style="font-size: 0.85rem; opacity: 0.9;">Student</div>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="welcome-text">
+            <h2>Welcome back, <span id="welcomeName">Student</span>! 👋</h2>
+            <p>Here's what's happening with your account today.</p>
+        </div>
+        <div class="welcome-icon">🎓</div>
+    </div>
+
+    <!-- Profile Header Section -->
+    <div id="profileHeaderContainer"></div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;">📚</div>
+            <div class="stat-info">
+                <h3 id="statClass">Loading...</h3>
+                <p>Your Class</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f3e5f5; color: #9c27b0;">📊</div>
+            <div class="stat-info">
+                <h3 id="statStatus">Loading...</h3>
+                <p>Registration Status</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;">✅</div>
+            <div class="stat-info">
+                <h3 id="statMedium">Loading...</h3>
+                <p>Medium</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #fff3e0; color: #ff9800;">📅</div>
+            <div class="stat-info">
+                <h3 id="statEvents">0</h3>
+                <p>Upcoming Events</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>⚡ Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="#" class="action-btn" onclick="viewProfile(); return false;">
+                <div class="action-btn-icon">👤</div>
+                <div class="action-btn-text">My Profile</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewAttendance(); return false;">
+                <div class="action-btn-icon">📋</div>
+                <div class="action-btn-text">Attendance</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewResults(); return false;">
+                <div class="action-btn-icon">📊</div>
+                <div class="action-btn-text">Results</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewFees(); return false;">
+                <div class="action-btn-icon">💰</div>
+                <div class="action-btn-text">Fee Status</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewAssignments(); return false;">
+                <div class="action-btn-icon">📝</div>
+                <div class="action-btn-text">Assignments</div>
+            </a>
+            <a href="#" class="action-btn" onclick="viewTimetable(); return false;">
+                <div class="action-btn-icon">🕐</div>
+                <div class="action-btn-text">Timetable</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="profile-section">
+        <h2>📋 My Information</h2>
+        <div class="profile-grid" id="profileGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Section -->
+    <div class="events-section">
+        <h2>📅 Upcoming Events</h2>
+        <div id="eventsContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const API_BASE_URL = window.location.origin;
+
+// Check authentication
+function checkAuth() {
+    const token = localStorage.getItem('authToken');
+    const role = localStorage.getItem('userRole');
+    
+    if (!token || role !== 'student') {
+        window.location.href = '/';
+        return false;
+    }
+    return true;
+}
+
+// Logout function
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userName');
+        window.location.href = '/';
+    }
+}
+
+// Get auth headers
+function getAuthHeaders() {
+    const token = localStorage.getItem('authToken');
+    return {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+}
+
+// Format date
+function formatDate(dateString) {
+    if (!dateString) return 'Not Available';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+
+// Capitalize text
+function capitalize(text) {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+// Load student dashboard data
+async function loadStudentData() {
+    try {
+        // 1. Load Dashboard Stats
+        await loadDashboardStats();
+        
+        // 2. Load Profile Details
+        await loadProfileDetails();
+        
+        // 3. Load Events
+        await loadEvents();
+        
+    } catch (err) {
+        console.error('Error loading student data:', err);
+        showError('Failed to load dashboard data. Please refresh the page.');
+    }
+}
+
+// Load dashboard statistics
+async function loadDashboardStats() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/student/dashboard-stats`, {
+            headers: getAuthHeaders()
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch stats');
+        }
+        
+        const data = await response.json();
+        console.log('Dashboard Stats:', data);
+        
+        if (data.success && data.stats) {
+            const stats = data.stats;
+            
+            // Update stats cards
+            document.getElementById('statClass').textContent = stats.class || 'Not Available';
+            document.getElementById('statStatus').textContent = capitalize(stats.status || 'pending');
+            document.getElementById('statMedium').textContent = capitalize(stats.medium || 'Not Available');
+            document.getElementById('statEvents').textContent = stats.upcomingEvents || 0;
+        }
+    } catch (err) {
+        console.error('Error loading dashboard stats:', err);
+        document.getElementById('statClass').textContent = 'Error';
+        document.getElementById('statStatus').textContent = 'Error';
+        document.getElementById('statMedium').textContent = 'Error';
+    }
+}
+
+// Load profile details
+async function loadProfileDetails() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/student/my-profile`, {
+            headers: getAuthHeaders()
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch profile');
+        }
+        
+        const data = await response.json();
+        console.log('Profile Data:', data);
+        
+        if (data.success) {
+            const user = data.user;
+            const registration = data.registration;
+            
+            // Update header name
+            if (registration && registration.fullName) {
+                document.getElementById('userName').textContent = registration.fullName;
+                document.getElementById('welcomeName').textContent = registration.fullName;
+            } else if (user && user.username) {
+                document.getElementById('userName').textContent = user.username;
+                document.getElementById('welcomeName').textContent = user.username;
+            }
+            
+            // Update profile header with photo
+            const profileHeaderContainer = document.getElementById('profileHeaderContainer');
+            const profileGrid = document.getElementById('profileGrid');
+            
+            if (registration) {
+                // Get status badge class
+                let statusClass = 'status-pending';
+                if (registration.status === 'approved') statusClass = 'status-approved';
+                if (registration.status === 'rejected') statusClass = 'status-rejected';
+                
+                // Display profile photo in header
+                const photoUrl = registration.photo ? `${API_BASE_URL}/uploads/${registration.photo}` : null;
+                
+                // Update nav avatar
+                const navAvatar = document.getElementById('navAvatar');
+                if (photoUrl) {
+                    navAvatar.innerHTML = `<img src="${photoUrl}" alt="Profile Photo" onerror="this.parentElement.innerHTML='👤'">`;
+                }
+                
+                // Create profile header with photo
+                profileHeaderContainer.innerHTML = `
+                    <div class="profile-header">
+                        <div class="profile-photo-container">
+                            ${photoUrl ? 
+                                `<img src="${photoUrl}" alt="Profile Photo" class="profile-photo" onerror="this.parentElement.innerHTML='<div class=\\'profile-photo-placeholder\\'>👤</div>'">` :
+                                `<div class="profile-photo-placeholder">👤</div>`
+                            }
+                        </div>
+                        <div class="profile-header-info">
+                            <h3>${registration.fullName || 'Not Available'}</h3>
+                            <p>📚 Class: ${registration.class || 'Not Available'} | 📖 Medium: ${capitalize(registration.medium) || 'Not Available'}</p>
+                            <p>📱 ${registration.contactNumber || 'Not Available'} | 📧 ${registration.email || 'Not Available'}</p>
+                            <p style="margin-top: 0.5rem;">
+                                Status: <span class="status-badge ${statusClass}" style="background: ${statusClass === 'status-approved' ? '#d4edda' : statusClass === 'status-rejected' ? '#f8d7da' : '#fff3cd'}; color: ${statusClass === 'status-approved' ? '#155724' : statusClass === 'status-rejected' ? '#721c24' : '#856404'};">${capitalize(registration.status)}</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                profileGrid.innerHTML = `
+                    <div class="profile-item">
+                        <label>Full Name</label>
+                        <div class="value">${registration.fullName || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Father's Name</label>
+                        <div class="value">${registration.fatherName || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Mother's Name</label>
+                        <div class="value">${registration.motherName || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Gender</label>
+                        <div class="value">${capitalize(registration.gender) || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Date of Birth</label>
+                        <div class="value">${formatDate(registration.dateOfBirth)}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Class</label>
+                        <div class="value">${registration.class || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Medium</label>
+                        <div class="value">${capitalize(registration.medium) || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Contact Number</label>
+                        <div class="value">${registration.contactNumber || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Email</label>
+                        <div class="value">${registration.email || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Address</label>
+                        <div class="value">${registration.address || 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Aadhar Number</label>
+                        <div class="value">${registration.aadharNumber ? '****-****-' + registration.aadharNumber.slice(-4) : 'Not Available'}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Registration Status</label>
+                        <div class="value">
+                            <span class="status-badge ${statusClass}">${capitalize(registration.status)}</span>
+                        </div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Registration Date</label>
+                        <div class="value">${formatDate(registration.createdAt)}</div>
+                    </div>
+                    <div class="profile-item">
+                        <label>Disability</label>
+                        <div class="value">${registration.disability === 'yes' ? 'Yes' : 'No'}</div>
+                    </div>
+                `;
+            } else {
+                profileHeaderContainer.innerHTML = '';
+                profileGrid.innerHTML = `
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Registration Not Found</strong><br>
+                        Your registration details are not available. Please contact the school administration.
+                    </div>
+                `;
+            }
+        }
+    } catch (err) {
+        console.error('Error loading profile:', err);
+        document.getElementById('profileGrid').innerHTML = `
+            <div class="alert alert-error">
+                <strong>❌ Error Loading Profile</strong><br>
+                Failed to load your profile details. Please try refreshing the page.
+            </div>
+        `;
+    }
+}
+
+// Load events
+async function loadEvents() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/events`);
+        const data = await response.json();
+        
+        const eventsContainer = document.getElementById('eventsContainer');
+        
+        if (data.success && data.events && data.events.length > 0) {
+            // Filter upcoming events
+            const upcomingEvents = data.events.filter(event => {
+                return new Date(event.date) >= new Date();
+            }).slice(0, 5);
+            
+            if (upcomingEvents.length > 0) {
+                eventsContainer.innerHTML = upcomingEvents.map(event => {
+                    const eventDate = new Date(event.date);
+                    const day = eventDate.getDate();
+                    const month = eventDate.toLocaleString('default', { month: 'short' });
+                    
+                    return `
+                        <div class="event-card">
+                            <div class="event-info">
+                                <h4>${event.title}</h4>
+                                <p>${event.description || capitalize(event.type)}</p>
+                            </div>
+                            <div class="event-date">
+                                <div class="day">${day}</div>
+                                <div class="month">${month}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                eventsContainer.innerHTML = '<p style="text-align:center; color:#666; padding: 2rem;">No upcoming events</p>';
+            }
+        } else {
+            eventsContainer.innerHTML = '<p style="text-align:center; color:#666; padding: 2rem;">No events available</p>';
+        }
+    } catch (err) {
+        console.error('Error loading events:', err);
+        document.getElementById('eventsContainer').innerHTML = '<p style="text-align:center; color:#dc3545; padding: 2rem;">Failed to load events</p>';
+    }
+}
+
+// Show error message
+function showError(message) {
+    const container = document.querySelector('.container');
+    const alert = document.createElement('div');
+    alert.className = 'alert alert-error';
+    alert.innerHTML = `<strong>❌ Error</strong><br>${message}`;
+    container.insertBefore(alert, container.firstChild);
+    
+    setTimeout(() => alert.remove(), 5000);
+}
+
+// Quick action functions (placeholders)
+function viewProfile() {
+    window.scrollTo({ top: document.querySelector('.profile-section').offsetTop - 100, behavior: 'smooth' });
+}
+
+function viewAttendance() {
+    alert('📊 Attendance tracking feature coming soon!');
+}
+
+function viewResults() {
+    alert('📈 Results/Marks view feature coming soon!');
+}
+
+function viewFees() {
+    alert('💰 Fee payment and status feature coming soon!');
+}
+
+function viewAssignments() {
+    alert('📝 Assignments and homework feature coming soon!');
+}
+
+function viewTimetable() {
+    alert('🕐 Class timetable feature coming soon!');
+}
+
+// Initialize on page load
+if (checkAuth()) {
+    console.log('Authentication verified. Loading student data...');
+    loadStudentData();
+} else {
+    console.log('Authentication failed. Redirecting...');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>STAR LIGHT - BARIGARH</title>
+    <style>
+        * { margin:0;padding:0;box-sizing:border-box;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+        }
+        nav {
+            position:fixed; width:100%; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px);
+            padding:1rem 5%; display:flex; justify-content:space-between; align-items:center; z-index:1000;
+            box-shadow:0 4px 20px rgba(0,0,0,0.1); animation:slideDown 0.5s ease;
+        }
+        @keyframes slideDown {from {transform:translateY(-100%);} to {transform:translateY(0);}}
+        .logo {
+            font-size:1.8rem;font-weight:bold;
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:pulse 2s infinite;
+        }
+        @keyframes pulse {0%,100%{opacity:1;}50%{opacity:0.8;}}
+        .nav-links {display:flex;gap:2rem;list-style:none;}
+        .nav-links a {text-decoration:none;color:#333;font-weight:500;transition:all 0.3s;position:relative;}
+        .nav-links a:hover {color:#667eea;transform:translateY(-2px);}
+        .nav-links a::after {
+            content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:#667eea;transition:width 0.3s;
+        }
+        .nav-links a:hover::after {width:100%;}
+        section {min-height:100vh;padding:6rem 5% 2rem;display:none;animation:fadeIn 0.5s ease;}
+        section.active {display:block;}
+        @keyframes fadeIn {from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+        #home {
+            display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; color:white;
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+        }
+        .hero-content h1 {font-size:4rem;margin-bottom:1rem;animation:fadeInUp 1s ease;}
+        @keyframes fadeInUp {from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+        .hero-content p {font-size:1.5rem;margin-bottom:2rem;animation:fadeInUp 1s ease 0.2s backwards;}
+        .cta-buttons {display:flex;gap:1rem;animation:fadeInUp 1s ease 0.4s backwards;flex-wrap:wrap;justify-content:center;}
+        .btn {padding:1rem 2rem;border:none;border-radius:50px;font-size:1rem;cursor:pointer;transition:all 0.3s;font-weight:600;}
+        .btn-primary {background:white;color:#667eea;}
+        .btn-primary:hover {transform:translateY(-5px);box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+        .btn-secondary {background:transparent;color:white;border:2px solid white;}
+        .btn-secondary:hover {background:white;color:#667eea;transform:translateY(-5px);}
+        .btn-admin {background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);color:white;border:2px solid rgba(255,255,255,0.5);}
+        .btn-admin:hover {transform:translateY(-5px);box-shadow:0 10px 30px rgba(240,147,251,0.5);}
+
+        .content-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 3rem auto 2rem;
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .slideshow-container {
+            flex: 1;
+            height: 500px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: slideAnimation 1s ease-in-out;
+        }
+
+        .slide.active {display: block;}
+
+        @keyframes slideAnimation {
+            from {opacity: 0;transform: scale(1.1);}
+            to {opacity: 1;transform: scale(1);}
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .slide-caption h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .slide-caption p {
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .slide-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 2rem;
+            border-radius: 50%;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .slide-nav:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slide-nav.prev {left: 20px;}
+        .slide-nav.next {right: 20px;}
+
+        .slide-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid white;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        .dot:hover {background: rgba(255, 255, 255, 0.8);}
+
+        .notice-board-container {
+            width: 400px;
+            flex-shrink: 0;
+        }
+
+        .notice-board {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+
+        .notice-board:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .notice-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .notice-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notice-date {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .api-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .api-status.connected {
+            background: rgba(46, 213, 115, 0.2);
+            color: #27ae60;
+        }
+
+        .api-status.error {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+
+        .notice-loading {
+            padding: 2rem;
+            text-align: center;
+            color: #667eea;
+            font-size: 1rem;
+        }
+
+        .notice-loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .notice-content {
+            padding: 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .notice-content::-webkit-scrollbar {width: 6px;}
+        .notice-content::-webkit-scrollbar-track {background: rgba(102, 126, 234, 0.1);border-radius: 10px;}
+        .notice-content::-webkit-scrollbar-thumb {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);border-radius: 10px;}
+
+        .notice-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-left: 4px solid #667eea;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notice-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), transparent);
+            transition: width 0.3s;
+        }
+
+        .notice-item:hover::before {width: 100%;}
+        .notice-item:last-child {margin-bottom: 0;}
+        .notice-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .notice-item.urgent {
+            border-left-color: #ff4757;
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.08) 0%, rgba(255, 71, 87, 0.03) 100%);
+        }
+
+        .notice-item.important {
+            border-left-color: #ffa502;
+            background: linear-gradient(135deg, rgba(255, 165, 2, 0.08) 0%, rgba(255, 165, 2, 0.03) 100%);
+        }
+
+        .notice-badge {
+            display: inline-block;
+            padding: 0.25rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        .urgent-badge {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b7a 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
+        }
+
+        .important-badge {
+            background: linear-gradient(135deg, #ffa502 0%, #ffb732 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 165, 2, 0.3);
+        }
+
+        .info-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .notice-item h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .notice-item p {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .notice-time {
+            font-size: 0.75rem;
+            color: #999;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .notice-time::before {
+            content: '🕒';
+            font-size: 0.8rem;
+        }
+
+        .no-notices {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #999;
+        }
+
+        .no-notices::before {
+            content: '📋';
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #ff4757;
+        }
+
+        .error-message::before {
+            content: '⚠️';
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .bottom-section {
+            width: 100%;
+            max-width: 1400px;
+            margin: 3rem auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            padding: 0 1rem;
+            animation: fadeInUp 1s ease 0.8s backwards;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .info-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.3rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card-content {
+            padding: 1.3rem;
+            overflow: hidden;
+        }
+
+        .calendar-container {text-align: center;}
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .calendar-month-year {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #2d3436;
+            letter-spacing: 0.5px;
+            flex: 1;
+            text-align: left;
+        }
+
+        .calendar-nav-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .calendar-nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-top: 0.8rem;
+        }
+
+        .calendar-day-header {
+            font-weight: 700;
+            color: #667eea;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .calendar-day {
+            padding: 0.65rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2d3436;
+            background: transparent;
+            border: none;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-day:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .calendar-day.holiday {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            font-weight: 700;
+        }
+
+        .calendar-day.sunday {
+            background: rgba(255, 71, 87, 0.08);
+            color: #ff4757;
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.25;
+            font-weight: 400;
+            color: #bbb;
+        }
+
+        .calendar-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.78rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 4px;
+        }
+
+        .weather-info {text-align: center;}
+
+        .weather-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .weather-icon {font-size: 5rem;}
+        .weather-temp {font-size: 3rem;font-weight: bold;color: #333;}
+        .weather-desc {font-size: 1.2rem;color: #666;text-transform: capitalize;}
+        .weather-location {font-size: 1rem;color: #999;margin-bottom: 1rem;}
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            overflow: hidden;
+        }
+
+        .weather-detail-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 3px solid #667eea;
+        }
+
+        .weather-detail-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 0.3rem;
+        }
+
+        .weather-detail-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .events-container {
+            max-height: 450px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .events-container::-webkit-scrollbar {width: 6px;}
+        .events-container::-webkit-scrollbar-track {background: rgba(102, 126, 234, 0.1);border-radius: 10px;}
+        .events-container::-webkit-scrollbar-thumb {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);border-radius: 10px;}
+
+        .event-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-left: 4px solid #667eea;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .event-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .event-item.holiday-event {
+            border-left-color: #ff4757;
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.08) 0%, rgba(255, 71, 87, 0.03) 100%);
+        }
+
+        .event-date {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 0.6rem;
+        }
+
+        .event-date.holiday-date {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b7a 100%);
+        }
+
+        .event-title {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .event-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1200px) {
+            .content-container {
+                flex-direction: column;
+                align-items: center;
+                margin: 2rem 1rem;
+            }
+            .slideshow-container {
+                width: 100%;
+                height: 400px;
+            }
+            .notice-board-container {
+                width: 100%;
+                max-width: 600px;
+            }
+            .bottom-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {font-size: 2.5rem;}
+            .hero-content p {font-size: 1.2rem;}
+            .slideshow-container {height: 300px;border-radius: 20px;}
+            .slide-caption h3 {font-size: 1.5rem;}
+            .slide-nav {padding: 0.7rem 1rem;font-size: 1.5rem;}
+            .nav-links {display: none;}
+            .cta-buttons {flex-direction: column;width: 100%;max-width: 300px;}
+            .notice-header {padding: 1.2rem;}
+            .notice-header h2 {font-size: 1.3rem;}
+            .notice-content {padding: 1rem;}
+            .notice-item {padding: 1rem;}
+            .notice-board {height: 450px;}
+            .bottom-section {margin: 2rem auto;}
+            .calendar-grid {gap: 5px;}
+            .calendar-day {padding: 0.5rem;font-size: 0.85rem;min-height: 38px;}
+            .calendar-month-year {font-size: 1.3rem;}
+            .calendar-nav-btn {width: 38px;height: 38px;font-size: 1.1rem;}
+            .weather-temp {font-size: 2.5rem;}
+            .weather-icon {font-size: 4rem;}
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">🎓 STAR LIGHT - BARIGARH</div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="school_dashboard.html">School Dashboard</a></li>
+            <li><a href="login.html">Student Dashboard</a></li>
+            <li><a href="registration.html">Registration</a></li>
+            <li><a href="contact_us.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="active">
+        <div class="hero-content">
+            <h1>WELCOME TO "STAR LIGHT PUBLIC ENGLISH SCHOOL - BARIGARH"</h1>
+            <p>Bright Future Begins Here</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='registration.html'">Enroll Now</button>
+                <button class="btn btn-admin" onclick="window.location.href='admin_login.html'">Admin Login</button>
+                <button class="btn btn-secondary" onclick="window.location.href='contact_us.html'">Contact Us</button>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <div class="slideshow-container">
+                <div class="slide active">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=500&fit=crop" alt="Students Learning">
+                    <div class="slide-caption">
+                        <h3>Excellence in Education</h3>
+                        <p>Nurturing young minds for a brighter tomorrow</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1200&h=500&fit=crop" alt="School Building">
+                    <div class="slide-caption">
+                        <h3>Modern Infrastructure</h3>
+                        <p>State-of-the-art facilities for holistic development</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=500&fit=crop" alt="Sports Activities">
+                    <div class="slide-caption">
+                        <h3>Sports & Activities</h3>
+                        <p>Developing physical fitness and team spirit</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&h=500&fit=crop" alt="Science Lab">
+                    <div class="slide-caption">
+                        <h3>Advanced Laboratories</h3>
+                        <p>Hands-on learning with modern equipment</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=1200&h=500&fit=crop" alt="Library">
+                    <div class="slide-caption">
+                        <h3>Knowledge Hub</h3>
+                        <p>Extensive library with thousands of books</p>
+                    </div>
+                </div>
+
+                <button class="slide-nav prev" onclick="changeSlide(-1)">‹</button>
+                <button class="slide-nav next" onclick="changeSlide(1)">›</button>
+
+                <div class="slide-dots">
+                    <span class="dot active" onclick="currentSlide(0)"></span>
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                </div>
+            </div>
+
+            <div class="notice-board-container">
+                <div class="notice-board">
+                    <div class="notice-header">
+                        <h2>📢 Notice Board</h2>
+                        <div class="notice-date" id="noticeDate"></div>
+                        <div class="api-status" id="apiStatus">Connecting...</div>
+                    </div>
+                    <div id="noticeContent" class="notice-content">
+                        <div class="notice-loading">Loading notices</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="info-card">
+                <div class="info-card-header">📅 Calendar</div>
+                <div class="info-card-content" style="overflow: hidden;">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <div class="calendar-month-year" id="calendarMonthYear">December 2025</div>
+                            <div class="calendar-nav-buttons">
+                                <button class="calendar-nav-btn" onclick="previousMonth()">←</button>
+                                <button class="calendar-nav-btn" onclick="nextMonth()">→</button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                                <span>Today</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: rgba(255, 71, 87, 0.15); border: 2px solid #ff4757;"></div>
+                                <span>Holiday</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-header">🌤️ Live Weather</div>
+                <div class="info-card-content">
+                    <div class="weather-info" id="weatherInfo">
+                        <div class="notice-loading">Loading weather data</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-header">🎉 Upcoming Events & Holidays</div>
+                <div class="info-card-content">
+                    <div class="events-container" id="eventsContent">
+                        <div class="notice-loading">Loading events</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ============================================
+        // ✅ API CONFIGURATION - CHANGE THIS TO YOUR SERVER URL
+        // ============================================
+        const API_CONFIG = {
+            baseURL: 'http://localhost:5000/api', // 🔥 CHANGE TO YOUR SERVER URL
+            endpoints: {
+                notices: '/notices',
+                events: '/events',
+                health: '/health'
+            }
+        };
+
+        // ============================================
+        // SLIDESHOW FUNCTIONALITY
+        // ============================================
+        let slideIndex = 0;
+        let slideTimer;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (n >= slides.length) { slideIndex = 0; }
+            if (n < 0) { slideIndex = slides.length - 1; }
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[slideIndex].classList.add('active');
+            dots[slideIndex].classList.add('active');
+        }
+
+        function changeSlide(n) {
+            clearInterval(slideTimer);
+            slideIndex += n;
+            showSlide(slideIndex);
+            startSlideTimer();
+        }
+
+        function currentSlide(n) {
+            clearInterval(slideTimer);
+            slideIndex = n;
+            showSlide(slideIndex);
+            startSlideTimer();
+        }
+
+        function autoSlide() {
+            slideIndex++;
+            showSlide(slideIndex);
+        }
+
+        function startSlideTimer() {
+            slideTimer = setInterval(autoSlide, 5000);
+        }
+
+        startSlideTimer();
+
+        // ============================================
+        // UPDATE DATE
+        // ============================================
+        function updateNoticeDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            const dateElement = document.getElementById('noticeDate');
+            if (dateElement) {
+                dateElement.textContent = today.toLocaleDateString('en-US', options);
+            }
+        }
+
+        // ============================================
+        // API STATUS CHECKER
+        // ============================================
+        async function checkAPIConnection() {
+            const statusElement = document.getElementById('apiStatus');
+            try {
+                const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.health}`, {
+                    method: 'GET',
+                    timeout: 5000
+                });
+                
+                if (response.ok) {
+                    statusElement.textContent = '✓ Server Connected';
+                    statusElement.className = 'api-status connected';
+                    console.log('✅ Server connection successful');
+                    return true;
+                } else {
+                    throw new Error('Server responded with error');
+                }
+            } catch (error) {
+                statusElement.textContent = '✗ Server Offline';
+                statusElement.className = 'api-status error';
+                console.error('❌ Server connection failed:', error);
+                return false;
+            }
+        }
+
+        // ============================================
+        // NOTICE BOARD - FETCH FROM API
+        // ============================================
+        async function fetchNotices() {
+            const noticeContent = document.getElementById('noticeContent');
+            
+            try {
+                console.log('🔄 Fetching notices from:', `${API_CONFIG.baseURL}${API_CONFIG.endpoints.notices}`);
+                
+                const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.notices}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('📥 Notices received:', data);
+                
+                if (data.success && data.notices && data.notices.length > 0) {
+                    displayNotices(data.notices);
+                    console.log(`✅ Displayed ${data.notices.length} notices`);
+                } else {
+                    noticeContent.innerHTML = '<div class="no-notices">No notices available at the moment.<br><small>Check back later for updates!</small></div>';
+                    console.log('ℹ️ No notices found');
+                }
+            } catch (error) {
+                console.error('❌ Error fetching notices:', error);
+                noticeContent.innerHTML = `
+                    <div class="error-message">
+                        <p>Unable to load notices</p>
+                        <small>Server: ${API_CONFIG.baseURL}</small><br>
+                        <small>Error: ${error.message}</small><br>
+                        <small style="margin-top:10px;display:block;">Make sure your backend server is running!</small>
+                    </div>
+                `;
+            }
+        }
+
+        function displayNotices(notices) {
+            const noticeContent = document.getElementById('noticeContent');
+            
+            // Sort by creation date (newest first)
+            notices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            noticeContent.innerHTML = notices.map(notice => {
+                const priorityClass = notice.priority ? notice.priority.toLowerCase() : 'info';
+                const badgeClass = `${priorityClass}-badge`;
+                const itemClass = priorityClass === 'urgent' || priorityClass === 'important' ? priorityClass : '';
+                
+                return `
+                    <div class="notice-item ${itemClass}">
+                        <span class="notice-badge ${badgeClass}">${notice.priority || 'INFO'}</span>
+                        <h3>${notice.title}</h3>
+                        <p>${notice.content}</p>
+                        <span class="notice-time">Posted: ${formatDate(notice.createdAt)}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function startNoticeRefresh() {
+            // Auto-refresh notices every 5 minutes
+            setInterval(() => {
+                console.log('🔄 Auto-refreshing notices...');
+                fetchNotices();
+            }, 300000);
+        }
+
+        // ============================================
+        // CALENDAR FUNCTIONALITY
+        // ============================================
+        let currentCalendarDate = new Date();
+        
+        const holidays2025_2026 = {
+            '2025-12-25': 'Christmas Day',
+            '2026-01-01': 'New Year Day',
+            '2026-01-26': 'Republic Day',
+            '2026-03-14': 'Holi',
+            '2026-04-02': 'Ram Navami',
+            '2026-04-06': 'Mahavir Jayanti',
+            '2026-04-10': 'Good Friday',
+            '2026-05-01': 'Labour Day',
+            '2026-07-31': 'Eid al-Adha',
+            '2026-08-15': 'Independence Day',
+            '2026-08-26': 'Janmashtami',
+            '2026-10-02': 'Gandhi Jayanti',
+            '2026-10-19': 'Dussehra',
+            '2026-11-08': 'Diwali'
+        };
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            const monthYearElement = document.getElementById('calendarMonthYear');
+            if (monthYearElement) {
+                monthYearElement.textContent = `${monthNames[month]} ${year}`;
+            }
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            if (!calendarGrid) return;
+            
+            calendarGrid.innerHTML = '';
+            
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+            
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day other-month';
+                dayCell.textContent = daysInPrevMonth - i;
+                calendarGrid.appendChild(dayCell);
+            }
+            
+            const today = new Date();
+            const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day';
+                dayCell.textContent = day;
+                
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const currentDate = new Date(year, month, day);
+                const dayOfWeek = currentDate.getDay();
+                
+                if (dayOfWeek === 0 && !holidays2025_2026[dateStr]) {
+                    dayCell.classList.add('sunday');
+                }
+                
+                if (holidays2025_2026[dateStr]) {
+                    dayCell.classList.add('holiday');
+                    dayCell.title = holidays2025_2026[dateStr];
+                }
+                
+                if (isCurrentMonth && day === today.getDate() && !holidays2025_2026[dateStr]) {
+                    dayCell.classList.add('today');
+                }
+                
+                calendarGrid.appendChild(dayCell);
+            }
+            
+            const totalCells = firstDay + daysInMonth;
+            const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+            
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayCell = document.createElement('div');
+                dayCell.className = 'calendar-day other-month';
+                dayCell.textContent = i;
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        function previousMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        // ============================================
+        // WEATHER FUNCTIONALITY
+        // ============================================
+        async function fetchWeather() {
+            const weatherInfo = document.getElementById('weatherInfo');
+            
+            try {
+                console.log('🌤️ Fetching weather data...');
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=23.2599&longitude=77.4126&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&timezone=Asia/Kolkata');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch weather data');
+                }
+                
+                const data = await response.json();
+                displayWeather(data);
+                console.log('✅ Weather data loaded');
+            } catch (error) {
+                console.error('❌ Error fetching weather:', error);
+                displaySampleWeather();
+            }
+        }
+
+        function getWeatherIcon(weatherCode) {
+            const weatherIcons = {
+                0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+                45: '🌫️', 48: '🌫️',
+                51: '🌦️', 53: '🌦️', 55: '🌦️',
+                61: '🌧️', 63: '🌧️', 65: '🌧️',
+                71: '🌨️', 73: '🌨️', 75: '🌨️',
+                80: '🌦️', 81: '🌦️', 82: '🌦️',
+                95: '⛈️', 96: '⛈️', 99: '⛈️'
+            };
+            return weatherIcons[weatherCode] || '🌤️';
+        }
+
+        function getWeatherDescription(weatherCode) {
+            const descriptions = {
+                0: 'Clear sky', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast',
+                45: 'Foggy', 48: 'Foggy',
+                51: 'Light drizzle', 53: 'Moderate drizzle', 55: 'Dense drizzle',
+                61: 'Slight rain', 63: 'Moderate rain', 65: 'Heavy rain',
+                71: 'Slight snow', 73: 'Moderate snow', 75: 'Heavy snow',
+                80: 'Slight rain showers', 81: 'Moderate rain showers', 82: 'Violent rain showers',
+                95: 'Thunderstorm', 96: 'Thunderstorm with hail', 99: 'Thunderstorm with heavy hail'
+            };
+            return descriptions[weatherCode] || 'Partly cloudy';
+        }
+
+        function displayWeather(data) {
+            const weatherInfo = document.getElementById('weatherInfo');
+            const current = data.current;
+            
+            weatherInfo.innerHTML = `
+                <div class="weather-main">
+                    <div class="weather-icon">${getWeatherIcon(current.weather_code)}</div>
+                    <div class="weather-temp">${Math.round(current.temperature_2m)}°C</div>
+                    <div class="weather-desc">${getWeatherDescription(current.weather_code)}</div>
+                    <div class="weather-location">📍 Bhopal, Madhya Pradesh</div>
+                </div>
+                <div class="weather-details">
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Feels Like</div>
+                        <div class="weather-detail-value">${Math.round(current.apparent_temperature)}°C</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Humidity</div>
+                        <div class="weather-detail-value">${current.relative_humidity_2m}%</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Wind Speed</div>
+                        <div class="weather-detail-value">${Math.round(current.wind_speed_10m)} km/h</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Precipitation</div>
+                        <div class="weather-detail-value">${current.precipitation} mm</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displaySampleWeather() {
+            const weatherInfo = document.getElementById('weatherInfo');
+            weatherInfo.innerHTML = `
+                <div class="weather-main">
+                    <div class="weather-icon">🌤️</div>
+                    <div class="weather-temp">24°C</div>
+                    <div class="weather-desc">Partly cloudy</div>
+                    <div class="weather-location">📍 Bhopal, Madhya Pradesh</div>
+                </div>
+                <div class="weather-details">
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Feels Like</div>
+                        <div class="weather-detail-value">23°C</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Humidity</div>
+                        <div class="weather-detail-value">65%</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Wind Speed</div>
+                        <div class="weather-detail-value">12 km/h</div>
+                    </div>
+                    <div class="weather-detail-item">
+                        <div class="weather-detail-label">Precipitation</div>
+                        <div class="weather-detail-value">0 mm</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startWeatherRefresh() {
+            // Auto-refresh weather every 10 minutes
+            setInterval(() => {
+                console.log('🌤️ Auto-refreshing weather...');
+                fetchWeather();
+            }, 600000);
+        }
+
+        // ============================================
+        // EVENTS - FETCH FROM API
+        // ============================================
+        async function fetchEvents() {
+            const eventsContent = document.getElementById('eventsContent');
+            
+            try {
+                console.log('🔄 Fetching events from:', `${API_CONFIG.baseURL}${API_CONFIG.endpoints.events}`);
+                
+                const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.events}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('📥 Events received:', data);
+                
+                if (data.success && data.events && data.events.length > 0) {
+                    displayEvents(data.events);
+                    console.log(`✅ Displayed ${data.events.length} events`);
+                } else {
+                    console.log('ℹ️ No events in database, showing defaults');
+                    displayDefaultEvents();
+                }
+            } catch (error) {
+                console.error('❌ Error fetching events:', error);
+                console.log('ℹ️ Showing default events as fallback');
+                displayDefaultEvents();
+            }
+        }
+
+        function displayEvents(events) {
+            const eventsContent = document.getElementById('eventsContent');
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const futureEvents = events.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate >= today;
+            });
+            
+            futureEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            if (futureEvents.length > 0) {
+                eventsContent.innerHTML = futureEvents.map(event => {
+                    const eventDate = new Date(event.date);
+                    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+                    const formattedDate = eventDate.toLocaleDateString('en-US', options);
+                    
+                    const isHoliday = event.type === 'holiday';
+                    const itemClass = isHoliday ? 'holiday-event' : '';
+                    const dateClass = isHoliday ? 'holiday-date' : '';
+                    
+                    return `
+                        <div class="event-item ${itemClass}">
+                            <div class="event-date ${dateClass}">${formattedDate}</div>
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-desc">${event.description || ''}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                eventsContent.innerHTML = '<div class="no-notices">No upcoming events at the moment.</div>';
+            }
+        }
+
+        function displayDefaultEvents() {
+            const eventsContent = document.getElementById('eventsContent');
+            
+            const upcomingEvents = [
+                {
+                    date: '2025-12-15',
+                    title: 'Parent-Teacher Meeting',
+                    description: 'Annual PTM to discuss student progress and performance.',
+                    type: 'event'
+                },
+                {
+                    date: '2025-12-20',
+                    title: 'Winter Concert',
+                    description: 'Annual winter music and dance concert by students.',
+                    type: 'event'
+                },
+                {
+                    date: '2025-12-25',
+                    title: 'Christmas Holiday',
+                    description: 'School closed for Christmas celebration.',
+                    type: 'holiday'
+                },
+                {
+                    date: '2026-01-01',
+                    title: 'New Year Holiday',
+                    description: 'School closed for New Year celebration.',
+                    type: 'holiday'
+                },
+                {
+                    date: '2026-01-06',
+                    title: 'Classes Resume',
+                    description: 'School reopens after winter vacation.',
+                    type: 'event'
+                },
+                {
+                    date: '2026-01-20',
+                    title: 'Annual Sports Day',
+                    description: 'Inter-house sports competitions and athletic events.',
+                    type: 'event'
+                },
+                {
+                    date: '2026-01-26',
+                    title: 'Republic Day',
+                    description: 'Republic Day celebration with flag hoisting ceremony.',
+                    type: 'holiday'
+                }
+            ];
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const futureEvents = upcomingEvents.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate >= today;
+            });
+            
+            futureEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            if (futureEvents.length > 0) {
+                eventsContent.innerHTML = futureEvents.map(event => {
+                    const eventDate = new Date(event.date);
+                    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+                    const formattedDate = eventDate.toLocaleDateString('en-US', options);
+                    
+                    const isHoliday = event.type === 'holiday';
+                    const itemClass = isHoliday ? 'holiday-event' : '';
+                    const dateClass = isHoliday ? 'holiday-date' : '';
+                    
+                    return `
+                        <div class="event-item ${itemClass}">
+                            <div class="event-date ${dateClass}">${formattedDate}</div>
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-desc">${event.description}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                eventsContent.innerHTML = '<div class="no-notices">No upcoming events at the moment.</div>';
+            }
+        }
+
+        // ============================================
+        // INITIALIZE ALL ON PAGE LOAD
+        // ============================================
+        window.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Initializing Star Light School Dashboard...');
+            console.log('📡 API Configuration:', API_CONFIG);
+            console.log('🔗 Server URL:', API_CONFIG.baseURL);
+            console.log('═'.repeat(60));
+            
+            // Update date
+            updateNoticeDate();
+            
+            // Check server connection
+            const isConnected = await checkAPIConnection();
+            
+            // Fetch notices from API
+            fetchNotices();
+            startNoticeRefresh();
+            
+            // Render calendar
+            renderCalendar();
+            
+            // Fetch weather
+            fetchWeather();
+            startWeatherRefresh();
+            
+            // Fetch events
+            fetchEvents();
+            
+            console.log('═'.repeat(60));
+            console.log(`✅ Dashboard initialized successfully!`);
+            console.log(`📊 Status: ${isConnected ? 'Connected' : 'Offline Mode'}`);
+        });
+    </script>
+</body>
+</html>

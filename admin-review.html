@@ -1,0 +1,3027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Light - Admin Review Panel</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Top Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    z-index: 100;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    animation: slideDown 0.8s ease;
+}
+@keyframes slideDown { from { transform: translateY(-100px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+.school-name { display:flex; align-items:center; gap:1rem; animation:fadeInLeft 1s ease 0.3s backwards; }
+@keyframes fadeInLeft { from { opacity:0; transform:translateX(-50px);} to {opacity:1; transform:translateX(0);} }
+.school-name-icon { font-size:2.5rem; animation:rotate3d 3s infinite ease-in-out; }
+@keyframes rotate3d {0%,100%{transform:rotate(0deg) scale(1);}25%{transform:rotate(10deg) scale(1.1);}50%{transform:rotate(-10deg) scale(1);}75%{transform:rotate(10deg) scale(1.1);}}
+.school-name-text h2 { color:white; font-size:1.6rem; text-shadow:2px 2px 8px rgba(0,0,0,0.3); letter-spacing:2px; font-weight:700; background: linear-gradient(45deg,#fff,#f0f0f0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;}
+.school-name-text p { color: rgba(255,255,255,0.95); font-size:0.85rem; margin-top:0.3rem; letter-spacing:0.5px; }
+.nav-buttons { display:flex; gap:1rem; animation:fadeInRight 1s ease 0.5s backwards; }
+@keyframes fadeInRight { from { opacity:0; transform:translateX(50px);} to {opacity:1; transform:translateX(0);} }
+.nav-btn { padding:0.8rem 1.8rem; border:2px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color:white; border-radius:50px; cursor:pointer; font-size:1rem; font-weight:600; display:flex; align-items:center; gap:0.6rem; transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); text-decoration:none; position:relative; overflow:hidden;}
+.nav-btn::before { content:''; position:absolute; top:50%; left:50%; width:0; height:0; border-radius:50%; background: rgba(255,255,255,0.3); transform:translate(-50%,-50%); transition: width 0.6s, height 0.6s;}
+.nav-btn:hover::before { width:400px; height:400px; }
+.nav-btn:hover { background: rgba(255,255,255,0.3); border-color:white; transform:translateY(-5px) scale(1.05); box-shadow:0 15px 35px rgba(0,0,0,0.4);}
+.nav-btn span { position:relative; z-index:1;}
+.nav-btn-icon { font-size:1.3rem; position:relative; z-index:1; transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);}
+.logout-btn:hover .nav-btn-icon { transform: rotate(180deg) scale(1.2); }
+
+/* Background */
+.background { position:fixed; width:100%; height:100%; overflow:hidden; top:0; left:0; z-index:0; }
+.shape { position:absolute; border-radius:50%; filter:blur(80px); opacity:0.5; animation:float 20s infinite ease-in-out; }
+.shape1 { width:300px;height:300px; background:linear-gradient(135deg,#667eea,#764ba2); top:-150px; left:-150px; animation-delay:0s;}
+.shape2 { width:400px;height:400px; background:linear-gradient(135deg,#f093fb,#f5576c); bottom:-200px; right:-200px; animation-delay:4s;}
+.shape3 { width:350px;height:350px; background:linear-gradient(135deg,#4facfe,#00f2fe); top:50%; left:50%; transform:translate(-50%,-50%); animation-delay:2s;}
+@keyframes float {0%,100%{transform:translate(0,0) scale(1);}25%{transform:translate(50px,-50px) scale(1.1);}50%{transform:translate(-30px,50px) scale(0.9);}75%{transform:translate(40px,30px) scale(1.05);}}
+
+/* Main Content */
+.main-content {
+    padding: 8rem 2rem 2rem;
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    background: rgba(255,255,255,0.15);
+    padding: 0.5rem;
+    border-radius: 50px;
+    animation: fadeIn 1s ease;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+.tab-btn {
+    padding: 1rem 2rem;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.tab-btn.active {
+    background: white;
+    color: #667eea;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transform: scale(1.05);
+}
+.tab-btn:hover:not(.active) {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* Notice Board Section */
+.notice-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.notice-section-header h2 {
+    color: white;
+    font-size: 2rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+.add-notice-btn {
+    padding: 1rem 2rem;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+.add-notice-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* Notice Cards */
+.notices-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.notice-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-left: 5px solid #667eea;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.notice-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+.notice-card.urgent {
+    border-left-color: #ff4757;
+}
+.notice-card.important {
+    border-left-color: #ffa502;
+}
+.notice-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+.notice-priority {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.priority-urgent {
+    background: linear-gradient(135deg, #ff4757, #ff6b7a);
+    color: white;
+}
+.priority-important {
+    background: linear-gradient(135deg, #ffa502, #ffb732);
+    color: white;
+}
+.priority-info {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+.notice-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+.notice-action-btn {
+    padding: 0.5rem 0.8rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.edit-notice-btn {
+    background: #667eea;
+    color: white;
+}
+.edit-notice-btn:hover {
+    background: #5568d3;
+    transform: scale(1.05);
+}
+.delete-notice-btn {
+    background: #ff4757;
+    color: white;
+}
+.delete-notice-btn:hover {
+    background: #e84050;
+    transform: scale(1.05);
+}
+.notice-card-body h3 {
+    color: #333;
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+.notice-card-body p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+.notice-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 2px solid #f0f0f0;
+    font-size: 0.85rem;
+    color: #999;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.notice-date {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Stats Cards */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    animation: slideUp 0.8s ease;
+}
+@keyframes slideUp { from {opacity:0; transform:translateY(50px);} to {opacity:1; transform:translateY(0);} }
+.stat-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.3);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.stat-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+.stat-label {
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+}
+
+/* Filter Tabs */
+.filter-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: rgba(255,255,255,0.1);
+    padding: 0.5rem;
+    border-radius: 50px;
+    animation: fadeIn 1s ease 0.5s backwards;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.filter-tab {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+.filter-tab.active {
+    background: white;
+    color: #667eea;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transform: scale(1.05);
+}
+.filter-tab:hover:not(.active) {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* Search Bar */
+.search-bar {
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease 0.6s backwards;
+}
+.search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.search-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3.5rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.9);
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+.search-input:focus {
+    outline: none;
+    border-color: white;
+    background: white;
+    box-shadow: 0 5px 20px rgba(255,255,255,0.3);
+}
+.search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3rem;
+    color: #667eea;
+}
+
+/* Registration Cards */
+.registrations-container {
+    display: grid;
+    gap: 2rem;
+    animation: fadeIn 1s ease 0.7s backwards;
+}
+.registration-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.5);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.registration-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+.registration-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+.registration-card.pending::before { background: linear-gradient(90deg, #ffc107, #ff9800); }
+.registration-card.approved::before { background: linear-gradient(90deg, #28a745, #20c997); }
+.registration-card.rejected::before { background: linear-gradient(90deg, #dc3545, #c82333); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.user-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #667eea;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+.user-details h3 {
+    color: #333;
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
+}
+.user-type {
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+.status-badge {
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.status-pending { background: #ffc107; color: #333; }
+.status-approved { background: #28a745; color: white; }
+.status-rejected { background: #dc3545; color: white; }
+
+.card-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.info-item {
+    padding: 0.8rem;
+    background: rgba(102,126,234,0.05);
+    border-radius: 10px;
+}
+.info-label {
+    color: #666;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+.info-value {
+    color: #333;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.card-documents {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(102,126,234,0.05);
+    border-radius: 10px;
+}
+.card-documents h4 {
+    color: #333;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+.document-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.doc-link {
+    padding: 0.6rem 1.2rem;
+    background: white;
+    border: 2px solid #667eea;
+    color: #667eea;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.doc-link:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+}
+.doc-link.unavailable {
+    border-color: #dc3545;
+    color: #dc3545;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.doc-link.unavailable:hover {
+    background: white;
+    color: #dc3545;
+    transform: none;
+}
+
+.card-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+.action-btn {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.btn-approve {
+    background: #28a745;
+    color: white;
+}
+.btn-approve:hover:not(:disabled) {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40,167,69,0.4);
+}
+.btn-reject {
+    background: #dc3545;
+    color: white;
+}
+.btn-reject:hover:not(:disabled) {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220,53,69,0.4);
+}
+.btn-view {
+    background: #667eea;
+    color: white;
+}
+.btn-view:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+}
+
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+.modal-overlay.show { 
+    display: flex !important; 
+    align-items: center; 
+    justify-content: center; 
+}
+.modal {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+.modal.large {
+    max-width: 900px;
+    max-height: 85vh;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+.modal-header h2 {
+    color: #667eea;
+    font-size: 1.8rem;
+}
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.3s;
+    line-height: 1;
+}
+.close-modal:hover {
+    color: #333;
+    transform: rotate(90deg);
+}
+.modal-body textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 120px;
+    margin-bottom: 1rem;
+}
+.modal-body textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+/* Notice Form */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+}
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+.form-group select {
+    cursor: pointer;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+.empty-state-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+.empty-state h3 {
+    color: white;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+.empty-state p {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    text-align: center;
+    padding: 3rem;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+    color: white;
+    font-size: 1.2rem;
+}
+
+/* Alert/Toast Message */
+.toast {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    z-index: 2000;
+    display: none;
+    animation: slideInRight 0.3s ease;
+}
+@keyframes slideInRight { from {transform: translateX(400px);} to {transform: translateX(0);} }
+.toast.show { display: block; }
+.toast.success { border-left: 5px solid #28a745; }
+.toast.error { border-left: 5px solid #dc3545; }
+.toast.warning { border-left: 5px solid #ffc107; }
+
+/* Document Preview */
+.document-preview {
+    width: 100%;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 10px;
+    margin-top: 1rem;
+    position: relative;
+}
+.document-preview iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+    border-radius: 10px;
+    background: white;
+}
+.document-preview img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+.document-preview .loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.preview-error {
+    text-align: center;
+    padding: 3rem;
+}
+.preview-error-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+.preview-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.preview-btn {
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+.preview-btn-download {
+    background: #667eea;
+    color: white;
+}
+.preview-btn-download:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+.preview-btn-open {
+    background: #28a745;
+    color: white;
+}
+.preview-btn-open:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+.preview-btn-fullscreen {
+    background: #ffc107;
+    color: #333;
+}
+.preview-btn-fullscreen:hover {
+    background: #ff9800;
+    transform: translateY(-2px);
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+.zoom-btn {
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.zoom-btn:hover {
+    background: #5568d3;
+}
+.zoom-level {
+    padding: 0.5rem 1rem;
+    background: rgba(102,126,234,0.1);
+    border-radius: 8px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .top-nav { padding: 1rem 1.5rem; flex-direction: column; gap: 1rem; }
+    .school-name { flex-direction: column; text-align: center; gap: 0.5rem; }
+    .school-name-text h2 { font-size: 1.2rem; }
+    .school-name-text p { font-size: 0.75rem; }
+    .nav-buttons { width: 100%; justify-content: center; }
+    .main-content { padding: 10rem 1rem 2rem; }
+    .stats-container { grid-template-columns: 1fr; }
+    .card-header { flex-direction: column; }
+    .card-body { grid-template-columns: 1fr; }
+    .card-actions { flex-direction: column; }
+    .action-btn { width: 100%; justify-content: center; }
+    .modal.large { max-width: 95%; }
+    .document-preview iframe,
+    .document-preview img {
+        height: 400px;
+        max-height: 400px;
+    }
+}
+</style>
+</head>
+<body>
+<div class="top-nav">
+    <div class="school-name">
+        <div class="school-name-icon">🎓</div>
+        <div class="school-name-text">
+            <h2>STAR LIGHT PUBLIC ENGLISH SCHOOL</h2>
+            <p>Gandhi Chawk Road, Barigarh - Chhatarpur, M.P. 471510</p>
+        </div>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-btn logout-btn" onclick="logout()">
+            <span class="nav-btn-icon">🚪</span>
+            <span>Logout</span>
+        </button>
+    </div>
+</div>
+
+<div class="background">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <div class="shape shape3"></div>
+
+</div>
+
+<div class="main-content">
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <button class="tab-btn active" onclick="switchTab('registrations')">
+            📋 Registrations
+        </button>
+        <button class="tab-btn" onclick="switchTab('notices')">
+            📢 Notice Board
+        </button>
+        <button class="tab-btn" onclick="switchTab('suggestions')">
+            💡 Suggestions
+        </button>
+        <button class="tab-btn" onclick="switchTab('contacts')">
+            📨 Contact Messages
+        </button>
+    </div>
+
+
+    <!-- Notice Board Tab -->
+    <div id="noticesTab" class="tab-content">
+        <div class="notice-section-header">
+            <h2>📢 Notice Board Management</h2>
+            <button class="add-notice-btn" onclick="openNoticeModal()">
+    ➕ Add New Notice
+</button>
+        </div>
+
+        <div class="notices-grid" id="noticesContainer">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading notices...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registrations Tab -->
+    <div id="registrationsTab" class="tab-content active">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number" id="pendingCount">0</div>
+                <div class="stat-label">Pending Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="approvedCount">0</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">❌</div>
+                <div class="stat-number" id="rejectedCount">0</div>
+                <div class="stat-label">Rejected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Total Registrations</div>
+            </div>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all" onclick="filterRegistrations('all', this)">All</button>
+            <button class="filter-tab" data-filter="pending" onclick="filterRegistrations('pending', this)">⏳ Pending</button>
+            <button class="filter-tab" data-filter="approved" onclick="filterRegistrations('approved', this)">✅ Approved</button>
+            <button class="filter-tab" data-filter="rejected" onclick="filterRegistrations('rejected', this)">❌ Rejected</button>
+            <button class="filter-tab" data-filter="student" onclick="filterRegistrations('student', this)">👨‍🎓 Students</button>
+            <button class="filter-tab" data-filter="staff" onclick="filterRegistrations('staff', this)">👨‍🏫 Staff</button>
+        </div>
+
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Search by name, email, contact number..."
+                    oninput="searchRegistrations()"
+                >
+            </div>
+        </div>
+
+        <div class="registrations-container" id="registrationsContainer">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading registrations...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Suggestions Tab -->
+<div id="suggestionsTab" class="tab-content">
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-number" id="draftSuggestionsCount">0</div>
+            <div class="stat-label">Draft Suggestions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-number" id="importantSuggestionsCount">0</div>
+            <div class="stat-label">Important</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🚫</div>
+            <div class="stat-number" id="ignoredSuggestionsCount">0</div>
+            <div class="stat-label">Ignored</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-number" id="totalSuggestionsCount">0</div>
+            <div class="stat-label">Total Suggestions</div>
+        </div>
+    </div>
+
+    <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterSuggestions('all', this)">All</button>
+        <button class="filter-tab" onclick="filterSuggestions('draft', this)">📝 Draft</button>
+        <button class="filter-tab" onclick="filterSuggestions('important', this)">⭐ Important</button>
+        <button class="filter-tab" onclick="filterSuggestions('ignored', this)">🚫 Ignored</button>
+        <button class="filter-tab" onclick="filterSuggestions('parent', this)">👪 Parents</button>
+        <button class="filter-tab" onclick="filterSuggestions('student', this)">👨‍🎓 Students</button>
+        <button class="filter-tab" onclick="filterSuggestions('staff', this)">👨‍🏫 Staff</button>
+    </div>
+
+    <div class="search-bar">
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input 
+                type="text" 
+                class="search-input" 
+                id="suggestionsSearchInput" 
+                placeholder="Search by name, email, or content..."
+                oninput="searchSuggestions()"
+            >
+        </div>
+    </div>
+
+    <div class="registrations-container" id="suggestionsContainer">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading suggestions...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Messages Tab -->
+<div id="contactsTab" class="tab-content">
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">📬</div>
+            <div class="stat-number" id="newMessagesCount">0</div>
+            <div class="stat-label">New Messages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👁️</div>
+            <div class="stat-number" id="readMessagesCount">0</div>
+            <div class="stat-label">Read</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number" id="repliedMessagesCount">0</div>
+            <div class="stat-label">Replied</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-number" id="totalMessagesCount">0</div>
+            <div class="stat-label">Total Messages</div>
+        </div>
+    </div>
+
+    <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterContacts('all', this)">All</button>
+        <button class="filter-tab" onclick="filterContacts('new', this)">📬 New</button>
+        <button class="filter-tab" onclick="filterContacts('read', this)">👁️ Read</button>
+        <button class="filter-tab" onclick="filterContacts('replied', this)">✅ Replied</button>
+    </div>
+
+    <div class="search-bar">
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input 
+                type="text" 
+                class="search-input" 
+                id="contactsSearchInput" 
+                placeholder="Search by name, email, or subject..."
+                oninput="searchContacts()"
+            >
+        </div>
+    </div>
+
+    <div class="registrations-container" id="contactsContainer">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading messages...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Notice Modal -->
+<div class="modal-overlay" id="noticeModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="noticeModalTitle">➕ Add New Notice</h2>
+            <button class="close-modal" onclick="closeNoticeModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <form id="noticeForm">
+                <div class="form-group">
+                    <label for="noticeTitle">Notice Title *</label>
+                    <input type="text" id="noticeTitle" placeholder="Enter notice title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="noticeContent">Notice Content *</label>
+                    <textarea id="noticeContent" placeholder="Enter notice details" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="noticePriority">Priority Level *</label>
+                    <select id="noticePriority" required>
+                        <option value="info">Info</option>
+                        <option value="important">Important</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="submit" class="action-btn btn-approve">
+                        💾 Save Notice
+                    </button>
+                    <button type="button" class="action-btn btn-view" onclick="closeNoticeModal()" style="background: #6c757d;">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="reviewModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTitle">Review Registration</h2>
+            <button class="close-modal" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <label for="adminComment" style="display:block; margin-bottom:0.5rem; color:#333; font-weight:600;">Admin Comment (Optional):</label>
+            <textarea 
+                id="adminComment" 
+                placeholder="Enter your comments or reasons for approval/rejection..."
+            ></textarea>
+            <div class="modal-actions" id="modalActions"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Suggestion Review Modal -->
+<div class="modal-overlay" id="suggestionReviewModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="suggestionModalTitle">Review Suggestion</h2>
+            <button class="close-modal" onclick="closeSuggestionModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="suggestionDetails" style="margin-bottom: 1.5rem;"></div>
+            
+            <label for="suggestionAdminComment" style="display:block; margin-bottom:0.5rem; color:#333; font-weight:600;">
+                Admin Comment (Optional):
+            </label>
+            <textarea 
+                id="suggestionAdminComment" 
+                placeholder="Add your comments about this suggestion..."
+                style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 10px; min-height: 100px; font-family: inherit; resize: vertical;"
+            ></textarea>
+            
+            <div class="modal-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="action-btn" onclick="updateSuggestionStatus('important')" 
+                    style="background: #ffc107; color: #333;">
+                    ⭐ Mark Important
+                </button>
+                <button class="action-btn" onclick="updateSuggestionStatus('ignored')" 
+                    style="background: #dc3545; color: white;">
+                    🚫 Ignore
+                </button>
+                <button class="action-btn" onclick="updateSuggestionStatus('draft')" 
+                    style="background: #6c757d; color: white;">
+                    📝 Mark as Draft
+                </button>
+                <button class="action-btn btn-view" onclick="closeSuggestionModal()" 
+                    style="background: #6c757d;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Message Review Modal -->
+<div class="modal-overlay" id="contactReviewModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="contactModalTitle">Review Contact Message</h2>
+            <button class="close-modal" onclick="closeContactModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div id="contactDetails" style="margin-bottom: 1.5rem;"></div>
+            
+            <div class="modal-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap;">
+                <button class="action-btn" onclick="updateContactStatus('read')" 
+                    style="background: #17a2b8; color: white;">
+                    👁️ Mark as Read
+                </button>
+                <button class="action-btn" onclick="updateContactStatus('replied')" 
+                    style="background: #28a745; color: white;">
+                    ✅ Mark as Replied
+                </button>
+                <button class="action-btn btn-reject" onclick="deleteContact()">
+                    🗑️ Delete
+                </button>
+                <button class="action-btn btn-view" onclick="closeContactModal()" 
+                    style="background: #6c757d;">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Document Preview Modal -->
+<div class="modal-overlay" id="documentModal">
+    <div class="modal large">
+        <div class="modal-header">
+            <h2 id="documentTitle">Document Preview</h2>
+            <button class="close-modal" onclick="closeDocumentModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="zoom-controls" id="zoomControls" style="display:none;">
+                <button class="zoom-btn" onclick="zoomOut()">🔍−</button>
+                <span class="zoom-level" id="zoomLevel">100%</span>
+                <button class="zoom-btn" onclick="zoomIn()">🔍+</button>
+                <button class="zoom-btn" onclick="resetZoom()">↺ Reset</button>
+            </div>
+            <div class="document-preview" id="documentPreview">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Loading document...</div>
+                </div>
+            </div>
+            <div class="preview-actions">
+                <button class="preview-btn preview-btn-download" onclick="downloadDocument()">
+                    💾 Download
+                </button>
+                <button class="preview-btn preview-btn-open" onclick="openDocumentNewTab()">
+                    🔗 Open in New Tab
+                </button>
+                <button class="preview-btn preview-btn-fullscreen" onclick="toggleFullscreen()">
+                    ⛶ Fullscreen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+// Configuration
+const API_BASE_URL = window.location.origin + '/api';
+
+const API_ENDPOINTS = {
+    studentRegistrations: '/student-registrations',
+    staffRegistrations: '/staff-registrations',
+    stats: '/stats',
+    notices: '/notices',
+    suggestions: '/suggestions',  // Add this after notices line
+    contacts: '/contacts',
+    updateStudentStatus: (id) => `/student-registrations/${id}/status`,
+    updateStaffStatus: (id) => `/staff-registrations/${id}/status`,
+    createNotice: '/notices',
+    updateNotice: (id) => `/notices/${id}`,
+    deleteNotice: (id) => `/notices/${id}`
+};
+
+let authToken = null;
+let allRegistrations = [];
+let allSuggestions = [];
+let allNotices = [];
+let allContacts = [];
+let currentFilter = 'all';
+let currentSuggestionFilter = 'all';
+let currentContactFilter = 'all'; 
+let currentRegistration = null;
+let currentSuggestion = null;
+let currentContact = null;
+let currentNotice = null;
+let currentDocumentUrl = null;
+let currentDocumentName = null;
+let currentZoom = 100;
+
+// Tab Switching
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    if (tabName === 'registrations') {
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+        document.getElementById('registrationsTab').classList.add('active');
+        currentFilter = 'all';
+    } else if (tabName === 'notices') {
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+        document.getElementById('noticesTab').classList.add('active');
+        loadNotices();
+    } else if (tabName === 'suggestions') {
+        document.querySelector('.tab-btn:nth-child(3)').classList.add('active');
+        document.getElementById('suggestionsTab').classList.add('active');
+        currentSuggestionFilter = 'all';
+        // Clear search input
+        const searchInput = document.getElementById('suggestionsSearchInput');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        
+        // Reset the filter tabs to show "All" as active
+        const suggestionsTab = document.getElementById('suggestionsTab');
+        if (suggestionsTab) {
+            const filterTabs = suggestionsTab.querySelectorAll('.filter-tab');
+            filterTabs.forEach((tab, index) => {
+                if (index === 0) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+        
+        loadSuggestions();
+    } else if (tabName === 'contacts') {
+        document.querySelector('.tab-btn:nth-child(4)').classList.add('active');
+        document.getElementById('contactsTab').classList.add('active');
+        currentContactFilter = 'all';
+        const searchInput = document.getElementById('contactsSearchInput');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        const contactsTab = document.getElementById('contactsTab');
+        if (contactsTab) {
+            const filterTabs = contactsTab.querySelectorAll('.filter-tab');
+            filterTabs.forEach((tab, index) => {
+                if (index === 0) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
+        loadContacts();
+    }
+}
+
+
+
+// Check authentication on load
+function checkAuth() {
+    authToken = localStorage.getItem('authToken');
+    const userRole = localStorage.getItem('userRole');
+    
+    if (!authToken || userRole !== 'admin') {
+        showToast('Please login as admin to access this page', 'error');
+        setTimeout(() => {
+            window.location.href = '/login.html';
+        }, 2000);
+        return false;
+    }
+    return true;
+}
+
+// API Helper Function
+async function apiRequest(endpoint, options = {}) {
+    try {
+        const config = {
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+                ...options.headers,
+            },
+        };
+        
+        const fullUrl = `${API_BASE_URL}${endpoint}`;
+        console.log('API Request:', fullUrl, options.method || 'GET');
+        
+        const response = await fetch(fullUrl, config);
+        console.log('API Response Status:', response.status);
+        
+        let data;
+        try {
+            data = await response.json();
+        } catch (e) {
+            console.error('Failed to parse JSON:', e);
+            throw new Error('Invalid server response');
+        }
+        
+        if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+                showToast('Session expired. Please login again.', 'error');
+                setTimeout(() => {
+                    localStorage.clear();
+                    window.location.href = '/login.html';
+                }, 2000);
+                throw new Error('Authentication failed');
+            }
+            throw new Error(data.msg || data.message || `Request failed: ${response.status}`);
+        }
+        
+        return data;
+    } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+    }
+}
+
+// ===================================
+// NOTICE BOARD FUNCTIONS
+// ===================================
+
+// Load notices
+async function loadNotices() {
+    const container = document.getElementById('noticesContainer');
+    
+    try {
+        console.log('🔄 Fetching notices...');
+        const data = await apiRequest(API_ENDPOINTS.notices);
+        
+        allNotices = data.notices || data.data || [];
+        console.log('📥 Notices loaded:', allNotices.length);
+        
+        renderNotices();
+    } catch (error) {
+        console.error('❌ Error loading notices:', error);
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">⚠️</div>
+                <h3>Error Loading Notices</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+// Render notices
+function renderNotices() {
+    const container = document.getElementById('noticesContainer');
+    
+    if (allNotices.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>No Notices Yet</h3>
+                <p>Click "Add New Notice" to create your first notice</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Sort by creation date (newest first)
+    const sortedNotices = [...allNotices].sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    
+    container.innerHTML = sortedNotices.map(notice => createNoticeCard(notice)).join('');
+}
+
+// Create notice card HTML
+function createNoticeCard(notice) {
+    const priorityClass = `priority-${notice.priority || 'info'}`;
+    const cardClass = notice.priority === 'urgent' || notice.priority === 'important' ? notice.priority : '';
+    
+    const createdDate = new Date(notice.createdAt).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    return `
+        <div class="notice-card ${cardClass}">
+            <div class="notice-card-header">
+                <span class="notice-priority ${priorityClass}">${notice.priority || 'INFO'}</span>
+                <div class="notice-actions">
+                    <button class="notice-action-btn edit-notice-btn" onclick="editNotice('${notice._id || notice.id}')">
+                        ✏️ Edit
+                    </button>
+                    <button class="notice-action-btn delete-notice-btn" onclick="deleteNotice('${notice._id || notice.id}')">
+                        🗑️ Delete
+                    </button>
+                </div>
+            </div>
+            <div class="notice-card-body">
+                <h3>${notice.title}</h3>
+                <p>${notice.content}</p>
+            </div>
+            <div class="notice-meta">
+                <span class="notice-date">🕒 Posted: ${createdDate}</span>
+            </div>
+        </div>
+    `;
+}
+
+// Open notice modal (Add/Edit)
+function openNoticeModal(noticeId = null) {
+    console.log('🔵 openNoticeModal called with ID:', noticeId);
+    
+    const modal = document.getElementById('noticeModal');
+    const modalTitle = document.getElementById('noticeModalTitle');
+    const form = document.getElementById('noticeForm');
+    
+    console.log('Modal element:', modal);
+    console.log('Modal title:', modalTitle);
+    console.log('Form element:', form);
+    
+    if (!modal) {
+        console.error('❌ Modal not found!');
+        alert('Error: Modal not found!');
+        return;
+    }
+    
+    if (!form) {
+        console.error('❌ Form not found!');
+        return;
+    }
+    
+    form.reset();
+    
+    if (noticeId) {
+        currentNotice = allNotices.find(n => (n._id || n.id) === noticeId);
+        if (currentNotice) {
+            modalTitle.textContent = '✏️ Edit Notice';
+            document.getElementById('noticeTitle').value = currentNotice.title;
+            document.getElementById('noticeContent').value = currentNotice.content;
+            document.getElementById('noticePriority').value = currentNotice.priority || 'info';
+        }
+    } else {
+        currentNotice = null;
+        modalTitle.textContent = '➕ Add New Notice';
+    }
+    
+    modal.classList.add('show');
+    console.log('✅ Modal should be visible now');
+    console.log('Modal classes:', modal.className);
+}
+
+// Close notice modal
+function closeNoticeModal() {
+    document.getElementById('noticeModal').classList.remove('show');
+    currentNotice = null;
+    document.getElementById('noticeForm').reset();
+}
+
+// Edit notice
+function editNotice(noticeId) {
+    openNoticeModal(noticeId);
+}
+
+// Delete notice
+async function deleteNotice(noticeId) {
+    if (!confirm('Are you sure you want to delete this notice?')) return;
+    
+    try {
+        await apiRequest(API_ENDPOINTS.deleteNotice(noticeId), {
+            method: 'DELETE'
+        });
+        
+        allNotices = allNotices.filter(n => (n._id || n.id) !== noticeId);
+        renderNotices();
+        showToast('Notice deleted successfully!', 'success');
+    } catch (error) {
+        console.error('Error deleting notice:', error);
+        showToast('Failed to delete notice: ' + error.message, 'error');
+    }
+}
+
+// Handle notice form submission
+document.getElementById('noticeForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const title = document.getElementById('noticeTitle').value.trim();
+    const content = document.getElementById('noticeContent').value.trim();
+    const priority = document.getElementById('noticePriority').value;
+    
+    if (!title || !content) {
+        showToast('Please fill in all required fields', 'warning');
+        return;
+    }
+    
+    try {
+        const noticeData = { title, content, priority };
+        
+        if (currentNotice) {
+            // Update existing notice
+            const noticeId = currentNotice._id || currentNotice.id;
+            await apiRequest(API_ENDPOINTS.updateNotice(noticeId), {
+                method: 'PUT',
+                body: JSON.stringify(noticeData)
+            });
+            
+            const index = allNotices.findIndex(n => (n._id || n.id) === noticeId);
+            if (index !== -1) {
+                allNotices[index] = { ...allNotices[index], ...noticeData, updatedAt: new Date().toISOString() };
+            }
+            
+            showToast('Notice updated successfully!', 'success');
+        } else {
+            // Create new notice
+            const response = await apiRequest(API_ENDPOINTS.createNotice, {
+                method: 'POST',
+                body: JSON.stringify(noticeData)
+            });
+            
+            const newNotice = response.notice || response.data || response;
+            allNotices.unshift(newNotice);
+            
+            showToast('Notice created successfully!', 'success');
+        }
+        
+        closeNoticeModal();
+        renderNotices();
+    } catch (error) {
+        console.error('Error saving notice:', error);
+        showToast('Failed to save notice: ' + error.message, 'error');
+    }
+});
+
+// ===================================
+// REGISTRATION FUNCTIONS
+// ===================================
+
+// Initialize
+async function init() {
+    if (!checkAuth()) return;
+    
+    try {
+        console.log('🔧 Initializing Admin Panel...');
+        await Promise.all([
+            loadRegistrations(),
+            loadStats(),
+            loadSuggestions(),
+            loadContacts()
+        ]);
+        updateStatsDisplay();
+        renderRegistrations();
+        console.log('✅ Admin Panel initialized');
+    } catch (error) {
+        console.error('❌ Initialization error:', error);
+        showError('Failed to initialize: ' + error.message);
+    }
+}
+
+// Load all registrations
+async function loadRegistrations() {
+    try {
+        const [studentsData, staffData] = await Promise.all([
+            apiRequest(API_ENDPOINTS.studentRegistrations),
+            apiRequest(API_ENDPOINTS.staffRegistrations)
+        ]);
+        
+        const students = (studentsData.students || studentsData.data || studentsData || []).map(s => ({
+            ...s,
+            type: 'student',
+            id: s._id || s.id,
+            registeredAt: s.createdAt || s.registeredAt,
+            documents: {
+                marksheet: s.marksheet || s.previousMarksheet
+            }
+        }));
+        
+        const staff = (staffData.staff || staffData.data || staffData || []).map(s => ({
+            ...s,
+            type: 'staff',
+            id: s._id || s.id,
+            registeredAt: s.createdAt || s.registeredAt,
+            documents: {
+                twelfthMarksheet: s.twelfthMarksheet,
+                qualificationMarksheet: s.qualificationMarksheet
+            }
+        }));
+        
+        allRegistrations = [...students, ...staff].sort((a, b) => 
+            new Date(b.registeredAt) - new Date(a.registeredAt)
+        );
+        
+        console.log('Loaded registrations:', allRegistrations.length);
+    } catch (error) {
+        console.error('Error loading registrations:', error);
+        throw error;
+    }
+}
+
+// Load statistics
+async function loadStats() {
+    try {
+        const data = await apiRequest(API_ENDPOINTS.stats);
+        return data.stats || data;
+    } catch (error) {
+        console.error('Error loading stats:', error);
+        return null;
+    }
+}
+
+// Update statistics display
+function updateStatsDisplay() {
+    const pending = allRegistrations.filter(r => r.status === 'pending').length;
+    const approved = allRegistrations.filter(r => r.status === 'approved').length;
+    const rejected = allRegistrations.filter(r => r.status === 'rejected').length;
+    const total = allRegistrations.length;
+    
+    document.getElementById('pendingCount').textContent = pending;
+    document.getElementById('approvedCount').textContent = approved;
+    document.getElementById('rejectedCount').textContent = rejected;
+    document.getElementById('totalCount').textContent = total;
+}
+
+// Filter registrations
+function filterRegistrations(filter, element) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+    element.classList.add('active');
+    renderRegistrations();
+}
+
+// Filter suggestions
+function filterSuggestions(filter, button) {
+    // 1. Save filter
+    currentSuggestionFilter = filter;
+
+    // 2. Remove active from ALL suggestion filter tabs ONLY
+    const suggestionsTab = document.getElementById('suggestionsTab');
+    if (suggestionsTab) {
+        suggestionsTab.querySelectorAll('.filter-tab').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    }
+
+    // 3. Add active ONLY to clicked button
+    if (button) {
+        button.classList.add('active');
+    }
+
+    // 4. Re-render suggestions
+    renderSuggestions();
+}
+
+
+// Search registrations
+function searchRegistrations() {
+    renderRegistrations();
+}
+
+// Render registrations
+function renderRegistrations() {
+    const container = document.getElementById('registrationsContainer');
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    let filtered = allRegistrations;
+    
+    if (currentFilter !== 'all') {
+        if (['pending', 'approved', 'rejected'].includes(currentFilter)) {
+            filtered = filtered.filter(r => r.status === currentFilter);
+        } else {
+            filtered = filtered.filter(r => r.type === currentFilter);
+        }
+    }
+    
+    if (searchTerm) {
+        filtered = filtered.filter(r => 
+            r.fullName.toLowerCase().includes(searchTerm) ||
+            r.email.toLowerCase().includes(searchTerm) ||
+            r.contactNumber.includes(searchTerm)
+        );
+    }
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>No Registrations Found</h3>
+                <p>There are no registrations matching your criteria.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = filtered.map(reg => createRegistrationCard(reg)).join('');
+}
+
+// Create registration card HTML
+function createRegistrationCard(reg) {
+    const isStudent = reg.type === 'student';
+    const statusClass = `status-${reg.status}`;
+    const cardClass = `registration-card ${reg.status}`;
+    
+    const statusBadge = {
+        pending: '⏳ Pending Review',
+        approved: '✅ Approved',
+        rejected: '❌ Rejected'
+    }[reg.status];
+    
+    const photoUrl = reg.photo ? `${window.location.origin}/uploads/${reg.photo.replace(/^uploads[\/\\]/, '')}` : null;
+    const photoDisplay = photoUrl 
+        ? `<img src="${photoUrl}" alt="${reg.fullName}" class="user-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+           <div class="user-photo" style="display:none;">${reg.fullName.charAt(0)}</div>` 
+        : `<div class="user-photo">${reg.fullName.charAt(0)}</div>`;
+    
+    const registeredDate = new Date(reg.registeredAt).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const studentInfo = isStudent ? `
+        <div class="info-item">
+            <div class="info-label">Father's Name</div>
+            <div class="info-value">${reg.fatherName}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Mother's Name</div>
+            <div class="info-value">${reg.motherName}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Class</div>
+            <div class="info-value">${reg.class}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Medium</div>
+            <div class="info-value">${reg.medium.charAt(0).toUpperCase() + reg.medium.slice(1)}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Gender</div>
+            <div class="info-value">${reg.gender.charAt(0).toUpperCase() + reg.gender.slice(1)}</div>
+        </div>
+    ` : `
+        <div class="info-item">
+            <div class="info-label">Father's Name</div>
+            <div class="info-value">${reg.fatherName}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Marital Status</div>
+            <div class="info-value">${reg.maritalStatus.charAt(0).toUpperCase() + reg.maritalStatus.slice(1)}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Qualification</div>
+            <div class="info-value">${reg.highestQualification}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Subject</div>
+            <div class="info-value">${reg.mainSubject}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">B.Ed / D.Ed</div>
+            <div class="info-value">${reg.hasBEd === 'yes' ? 'B.Ed ✓' : ''} ${reg.hasDEd === 'yes' ? 'D.Ed ✓' : ''}</div>
+        </div>
+    `;
+    
+    const documents = isStudent ? `
+        ${reg.documents.marksheet ? 
+            `<a class="doc-link" data-type="student" data-id="${reg.id}" data-doc-type="marksheet" data-doc-name="Previous Marksheet">
+                📄 View Previous Marksheet
+            </a>` : 
+            `<span class="doc-link unavailable">📄 Marksheet Not Uploaded</span>`
+        }
+    ` : `
+        ${reg.documents.twelfthMarksheet ? 
+            `<a class="doc-link" data-type="staff" data-id="${reg.id}" data-doc-type="twelfthMarksheet" data-doc-name="12th Marksheet">
+                📄 View 12th Marksheet
+            </a>` : 
+            `<span class="doc-link unavailable">📄 12th Marksheet Not Uploaded</span>`
+        }
+        ${reg.documents.qualificationMarksheet ? 
+            `<a class="doc-link" data-type="staff" data-id="${reg.id}" data-doc-type="qualificationMarksheet" data-doc-name="Qualification Certificate">
+                📄 View Qualification Certificate
+            </a>` : 
+            `<span class="doc-link unavailable">📄 Qualification Not Uploaded</span>`
+        }
+    `;
+    
+    const actions = reg.status === 'pending' ? `
+        <button class="action-btn btn-approve" onclick="openReviewModal('${reg.id}', 'approve')">
+            ✅ Approve
+        </button>
+        <button class="action-btn btn-reject" onclick="openReviewModal('${reg.id}', 'reject')">
+            ❌ Reject
+        </button>
+    ` : reg.status === 'rejected' ? `
+        <button class="action-btn btn-approve" onclick="acceptRejected('${reg.id}')">
+            ✅ Accept
+        </button>
+    ` : `
+        <span style="color: #666; font-style: italic;">Already approved</span>
+    `;
+    
+    return `
+        <div class="${cardClass}" data-id="${reg.id}">
+            <div class="card-header">
+                <div class="user-info">
+                    ${photoDisplay}
+                    <div class="user-details">
+                        <h3>${reg.fullName}</h3>
+                        <span class="user-type">${isStudent ? '👨‍🎓 Student' : '👨‍🏫 Staff'}</span>
+                    </div>
+                </div>
+                <span class="status-badge ${statusClass}">${statusBadge}</span>
+            </div>
+            
+            <div class="card-body">
+                <div class="info-item">
+                    <div class="info-label">Contact Number</div>
+                    <div class="info-value">${reg.contactNumber}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">${reg.email}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Date of Birth</div>
+                    <div class="info-value">${new Date(reg.dateOfBirth).toLocaleDateString('en-IN')}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Aadhar Number</div>
+                    <div class="info-value">${reg.aadharNumber}</div>
+                </div>
+                ${studentInfo}
+                <div class="info-item">
+                    <div class="info-label">Registered On</div>
+                    <div class="info-value">${registeredDate}</div>
+                </div>
+            </div>
+            
+            ${isStudent && reg.address ? `
+                <div class="card-documents">
+                    <h4>📍 Address</h4>
+                    <p style="color: #666;">${reg.address}</p>
+                </div>
+            ` : ''}
+            
+            <div class="card-documents">
+                <h4>📎 Documents</h4>
+                <div class="document-links">
+                    ${documents}
+                </div>
+            </div>
+            
+            <div class="card-actions">
+                ${actions}
+            </div>
+        </div>
+    `;
+}
+
+// Open review modal
+function openReviewModal(id, action) {
+    currentRegistration = allRegistrations.find(r => r.id === id);
+    if (!currentRegistration) return;
+    
+    const modal = document.getElementById('reviewModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalActions = document.getElementById('modalActions');
+    
+    modalTitle.textContent = action === 'approve' 
+        ? `✅ Approve Registration - ${currentRegistration.fullName}` 
+        : `❌ Reject Registration - ${currentRegistration.fullName}`;
+    
+    document.getElementById('adminComment').value = '';
+    
+    if (action === 'approve') {
+        modalActions.innerHTML = `
+            <button class="action-btn btn-approve" onclick="submitReview('approved')">
+                ✅ Confirm Approval
+            </button>
+            <button class="action-btn btn-view" onclick="closeModal()" style="background: #6c757d;">
+                Cancel
+            </button>
+        `;
+    } else {
+        modalActions.innerHTML = `
+            <button class="action-btn btn-reject" onclick="submitReview('rejected')">
+                ❌ Confirm Rejection
+            </button>
+            <button class="action-btn btn-view" onclick="closeModal()" style="background: #6c757d;">
+                Cancel
+            </button>
+        `;
+    }
+    
+    modal.classList.add('show');
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('reviewModal').classList.remove('show');
+    currentRegistration = null;
+}
+
+// Submit review
+async function submitReview(status) {
+    const comment = document.getElementById('adminComment').value.trim();
+    
+    try {
+        const endpoint = currentRegistration.type === 'student' 
+            ? API_ENDPOINTS.updateStudentStatus(currentRegistration.id)
+            : API_ENDPOINTS.updateStaffStatus(currentRegistration.id);
+        
+        await apiRequest(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify({ status, comment })
+        });
+        
+        const index = allRegistrations.findIndex(r => r.id === currentRegistration.id);
+        if (index !== -1) {
+            allRegistrations[index].status = status;
+            if (comment) allRegistrations[index].adminComment = comment;
+        }
+        
+        closeModal();
+        updateStatsDisplay();
+        renderRegistrations();
+        
+        showToast(
+            `Registration ${status === 'approved' ? 'approved' : 'rejected'} successfully!`,
+            'success'
+        );
+    } catch (error) {
+        console.error('Error submitting review:', error);
+        showToast('Failed to submit review: ' + error.message, 'error');
+    }
+}
+
+// Preview document
+async function previewDocument(type, id, docType, docName) {
+    try {
+        currentDocumentName = docName;
+        currentZoom = 100;
+        
+        const modal = document.getElementById('documentModal');
+        const documentTitle = document.getElementById('documentTitle');
+        const documentPreview = document.getElementById('documentPreview');
+        const zoomControls = document.getElementById('zoomControls');
+        
+        documentTitle.textContent = `📄 ${docName}`;
+        modal.classList.add('show');
+        
+        documentPreview.innerHTML = `
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading document...</div>
+            </div>
+        `;
+        
+        const registration = allRegistrations.find(r => r.id === id);
+        if (!registration) {
+            throw new Error('Registration not found');
+        }
+        
+        let documentFilename = null;
+        
+        if (type === 'student') {
+            if (docType === 'marksheet') {
+                documentFilename = registration.marksheet || registration.documents?.marksheet;
+            }
+        } else if (type === 'staff') {
+            if (docType === 'twelfthMarksheet') {
+                documentFilename = registration.twelfthMarksheet || registration.documents?.twelfthMarksheet;
+            } else if (docType === 'qualificationMarksheet') {
+                documentFilename = registration.qualificationMarksheet || registration.documents?.qualificationMarksheet;
+            }
+        }
+        
+        if (docType === 'photo') {
+            documentFilename = registration.photo;
+        }
+        
+        if (!documentFilename) {
+            throw new Error('Document not found in registration data');
+        }
+        
+        documentFilename = documentFilename.replace(/^uploads[\/\\]/, '');
+        const documentUrl = `${window.location.origin}/uploads/${documentFilename}`;
+        currentDocumentUrl = documentUrl;
+        
+        console.log('Loading document:', documentUrl);
+        
+        const response = await fetch(documentUrl);
+        
+        if (!response.ok) {
+            throw new Error('Document not found or access denied');
+        }
+        
+        const extension = documentFilename.split('.').pop().toLowerCase();
+        
+        if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
+            zoomControls.style.display = 'flex';
+            renderImagePreview(documentUrl, docName);
+        } else if (extension === 'pdf') {
+            zoomControls.style.display = 'none';
+            renderPdfPreview(documentUrl, docName);
+        } else {
+            zoomControls.style.display = 'none';
+            showUnsupportedFormat(docName, extension);
+        }
+    } catch (error) {
+        console.error('Error previewing document:', error);
+        showPreviewError(error.message || 'Unable to load document');
+    }
+}
+
+// Render image preview
+function renderImagePreview(url, name) {
+    const documentPreview = document.getElementById('documentPreview');
+    const img = new Image();
+    
+    img.onload = function() {
+        documentPreview.innerHTML = `
+            <img src="${url}" alt="${name}" id="previewImage" style="transform: scale(${currentZoom / 100}); transition: transform 0.3s ease;">
+        `;
+        updateZoomLevel();
+    };
+    
+    img.onerror = function() {
+        showPreviewError('Failed to load image. The file may be corrupted or in an unsupported format.');
+    };
+    
+    img.src = url;
+}
+
+// Render PDF preview
+function renderPdfPreview(url, name) {
+    const documentPreview = document.getElementById('documentPreview');
+    const iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.style.width = '100%';
+    iframe.style.height = '500px';
+    iframe.style.border = 'none';
+    iframe.style.borderRadius = '10px';
+    iframe.style.background = 'white';
+    
+    iframe.onerror = function() {
+        showPreviewError('Unable to load PDF. Click "Open in New Tab" to view.');
+    };
+    
+    documentPreview.innerHTML = '';
+    documentPreview.appendChild(iframe);
+}
+
+// Show unsupported format
+function showUnsupportedFormat(name, extension) {
+    const documentPreview = document.getElementById('documentPreview');
+    documentPreview.innerHTML = `
+        <div style="text-align: center; padding: 3rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📎</div>
+            <h3 style="color: #333; margin-bottom: 1rem;">${name}</h3>
+            <p style="color: #666; margin-bottom: 0.5rem;">File Extension: .${extension}</p>
+            <p style="color: #999; font-size: 0.9rem; margin-bottom: 2rem;">Preview not available for this file type</p>
+        </div>
+    `;
+}
+
+// Show preview error
+function showPreviewError(message) {
+    const documentPreview = document.getElementById('documentPreview');
+    documentPreview.innerHTML = `
+        <div class="preview-error">
+            <div class="preview-error-icon">⚠️</div>
+            <h3 style="color: #333; margin-bottom: 1rem;">Preview Error</h3>
+            <p style="color: #666; margin-bottom: 1rem;">${message}</p>
+        </div>
+    `;
+}
+
+// Zoom functions
+function zoomIn() {
+    currentZoom = Math.min(currentZoom + 25, 300);
+    applyZoom();
+}
+
+function zoomOut() {
+    currentZoom = Math.max(currentZoom - 25, 50);
+    applyZoom();
+}
+
+function resetZoom() {
+    currentZoom = 100;
+    applyZoom();
+}
+
+function applyZoom() {
+    const img = document.getElementById('previewImage');
+    if (img) {
+        img.style.transform = `scale(${currentZoom / 100})`;
+    }
+    updateZoomLevel();
+}
+
+function updateZoomLevel() {
+    const zoomLevel = document.getElementById('zoomLevel');
+    if (zoomLevel) {
+        zoomLevel.textContent = `${currentZoom}%`;
+    }
+}
+
+// Toggle fullscreen
+function toggleFullscreen() {
+    const modal = document.querySelector('#documentModal .modal');
+    
+    if (!document.fullscreenElement) {
+        if (modal.requestFullscreen) {
+            modal.requestFullscreen();
+        } else if (modal.webkitRequestFullscreen) {
+            modal.webkitRequestFullscreen();
+        }
+        showToast('Press ESC to exit fullscreen', 'success');
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+}
+
+// Close document modal
+function closeDocumentModal() {
+    document.getElementById('documentModal').classList.remove('show');
+    document.getElementById('zoomControls').style.display = 'none';
+    currentDocumentUrl = null;
+    currentDocumentName = null;
+    currentZoom = 100;
+}
+
+// Download document
+async function downloadDocument() {
+    if (!currentDocumentUrl) {
+        showToast('Document URL not found', 'error');
+        return;
+    }
+    
+    try {
+        showToast('Starting download...', 'success');
+        
+        const response = await fetch(currentDocumentUrl);
+        
+        if (!response.ok) throw new Error('Download failed');
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        
+        const urlParts = currentDocumentUrl.split('/');
+        const filename = urlParts[urlParts.length - 1] || currentDocumentName || 'document';
+        
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        showToast('Document downloaded successfully!', 'success');
+    } catch (error) {
+        console.error('Download error:', error);
+        showToast('Download failed: ' + error.message, 'error');
+    }
+}
+
+// Open document in new tab
+function openDocumentNewTab() {
+    if (!currentDocumentUrl) {
+        showToast('Document URL not found', 'error');
+        return;
+    }
+    
+    const newWindow = window.open(currentDocumentUrl, '_blank');
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        showToast('Please allow pop-ups to view documents', 'warning');
+    } else {
+        showToast('Document opened in new tab', 'success');
+    }
+}
+
+// Accept rejected registration
+async function acceptRejected(id) {
+    if (!confirm('Are you sure you want to accept this rejected registration?')) return;
+    
+    const registration = allRegistrations.find(r => r.id === id);
+    if (!registration) return;
+    
+    try {
+        const endpoint = registration.type === 'student' 
+            ? API_ENDPOINTS.updateStudentStatus(id)
+            : API_ENDPOINTS.updateStaffStatus(id);
+        
+        await apiRequest(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify({ status: 'approved', comment: 'Accepted after rejection' })
+        });
+        
+        const index = allRegistrations.findIndex(r => r.id === id);
+        if (index !== -1) {
+            allRegistrations[index].status = 'approved';
+        }
+        
+        updateStatsDisplay();
+        renderRegistrations();
+        showToast('Registration accepted successfully!', 'success');
+    } catch (error) {
+        console.error('Error accepting registration:', error);
+        showToast('Failed to accept registration: ' + error.message, 'error');
+    }
+}
+
+// Logout
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.clear();
+        window.location.href = '/login.html';
+    }
+}
+
+// Show toast notification
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = `toast ${type} show`;
+    setTimeout(() => toast.classList.remove('show'), 5000);
+}
+
+// Show error
+function showError(message) {
+    document.getElementById('registrationsContainer').innerHTML = `
+        <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <h3>Error</h3>
+            <p>${message}</p>
+        </div>
+    `;
+}
+
+// Close modals on outside click
+document.getElementById('reviewModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+document.getElementById('documentModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDocumentModal();
+});
+
+document.getElementById('noticeModal').addEventListener('click', function(e) {
+    if (e.target === this) closeNoticeModal();
+});
+document.getElementById('suggestionReviewModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSuggestionModal();
+});
+document.getElementById('contactReviewModal').addEventListener('click', function(e) {
+    if (e.target === this) closeContactModal();
+});
+
+// Event delegation for document links
+document.getElementById('registrationsContainer').addEventListener('click', function(e) {
+    const docLink = e.target.closest('.doc-link:not(.unavailable)');
+    if (docLink) {
+        e.preventDefault();
+        const type = docLink.getAttribute('data-type');
+        const id = docLink.getAttribute('data-id');
+        const docType = docLink.getAttribute('data-doc-type');
+        const docName = docLink.getAttribute('data-doc-name');
+        
+        if (type && id && docType && docName) {
+            previewDocument(type, id, docType, docName);
+        }
+    }
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const reviewModal = document.getElementById('reviewModal');
+        const documentModal = document.getElementById('documentModal');
+        const noticeModal = document.getElementById('noticeModal');
+        const suggestionModal = document.getElementById('suggestionReviewModal');
+        const contactModal = document.getElementById('contactReviewModal');
+        
+        if (reviewModal.classList.contains('show')) {
+            closeModal();
+        } else if (documentModal.classList.contains('show')) {
+            closeDocumentModal();
+        } else if (noticeModal.classList.contains('show')) {
+            closeNoticeModal();
+        } else if (suggestionModal.classList.contains('show')) {
+            closeSuggestionModal();
+        } else if (contactModal.classList.contains('show')) {
+            closeContactModal();
+        }
+    }
+    
+    const documentModal = document.getElementById('documentModal');
+    if (documentModal.classList.contains('show')) {
+        if (e.key === '+' || e.key === '=') {
+            e.preventDefault();
+            zoomIn();
+        } else if (e.key === '-' || e.key === '_') {
+            e.preventDefault();
+            zoomOut();
+        } else if (e.key === '0') {
+            e.preventDefault();
+            resetZoom();
+        }
+    }
+});
+
+// Initialize on load
+window.addEventListener('load', () => {
+    try {
+        init();
+    } catch (err) {
+        console.error('Init error:', err);
+    }
+});
+
+
+// ===================================
+// SUGGESTIONS FUNCTIONS
+// ===================================
+
+// Load all suggestions
+async function loadSuggestions() {
+    const container = document.getElementById('suggestionsContainer');
+    
+    try {
+        console.log('🔄 Fetching suggestions...');
+        const data = await apiRequest(API_ENDPOINTS.suggestions);
+        
+        allSuggestions = data.suggestions || data.data || [];
+        console.log('📥 Suggestions loaded:', allSuggestions.length);
+        
+        updateSuggestionsStats();
+        renderSuggestions();
+    } catch (error) {
+        console.error('❌ Error loading suggestions:', error);
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">⚠️</div>
+                <h3>Error Loading Suggestions</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+// Update suggestions statistics
+function updateSuggestionsStats() {
+    const draft = allSuggestions.filter(s => s.status === 'draft').length;
+    const important = allSuggestions.filter(s => s.status === 'important').length;
+    const ignored = allSuggestions.filter(s => s.status === 'ignored').length;
+    const total = allSuggestions.length;
+    
+    document.getElementById('draftSuggestionsCount').textContent = draft;
+    document.getElementById('importantSuggestionsCount').textContent = important;
+    document.getElementById('ignoredSuggestionsCount').textContent = ignored;
+    document.getElementById('totalSuggestionsCount').textContent = total;
+}
+
+// Filter suggestions
+function filterSuggestions(filter, element) {
+    currentSuggestionFilter = filter;
+    // Get all filter tabs in the suggestions tab specifically
+    const suggestionsTab = document.getElementById('suggestionsTab');
+    if (suggestionsTab) {
+        const filterTabs = suggestionsTab.querySelectorAll('.filter-tab');
+        filterTabs.forEach(tab => tab.classList.remove('active'));
+    }
+    element.classList.add('active');
+    renderSuggestions();
+}
+
+// Search suggestions
+function searchSuggestions() {
+    renderSuggestions();
+}
+
+// Render suggestions
+function renderSuggestions() {
+    const container = document.getElementById('suggestionsContainer');
+    const searchTerm = document.getElementById('suggestionsSearchInput').value.toLowerCase();
+    
+    let filtered = allSuggestions;
+    
+    // Apply filter
+    if (currentSuggestionFilter !== 'all') {
+        if (['draft', 'important', 'ignored'].includes(currentSuggestionFilter)) {
+            filtered = filtered.filter(s => s.status === currentSuggestionFilter);
+        } else if (['parent', 'student', 'staff', 'other'].includes(currentSuggestionFilter)) {
+            filtered = filtered.filter(s => s.role === currentSuggestionFilter);
+        }
+    }
+    
+    // Apply search
+    if (searchTerm) {
+        filtered = filtered.filter(s => 
+            s.name.toLowerCase().includes(searchTerm) ||
+            s.email.toLowerCase().includes(searchTerm) ||
+            s.suggestion.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>No Suggestions Found</h3>
+                <p>There are no suggestions matching your criteria.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = filtered.map(suggestion => createSuggestionCard(suggestion)).join('');
+}
+
+// Create suggestion card HTML
+function createSuggestionCard(suggestion) {
+    const statusColors = {
+        draft: '#6c757d',
+        important: '#ffc107',
+        ignored: '#dc3545'
+    };
+    
+    const statusIcons = {
+        draft: '📝',
+        important: '⭐',
+        ignored: '🚫'
+    };
+    
+    const roleIcons = {
+        parent: '👪',
+        student: '👨‍🎓',
+        staff: '👨‍🏫',
+        other: '👤'
+    };
+    
+    const categoryIcons = {
+        academic: '📚',
+        facilities: '🏢',
+        staff: '👨‍🏫',
+        transport: '🚌',
+        events: '🎉',
+        other: '📝'
+    };
+    
+    const submittedDate = new Date(suggestion.submittedAt || suggestion.createdAt).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const reviewedDate = suggestion.reviewedAt 
+        ? new Date(suggestion.reviewedAt).toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+          })
+        : null;
+    
+    return `
+        <div class="registration-card" style="border-top: 5px solid ${statusColors[suggestion.status]};" data-id="${suggestion._id || suggestion.id}">
+            <div class="card-header">
+                <div class="user-info">
+                    <div class="user-photo">${suggestion.name.charAt(0)}</div>
+                    <div class="user-details">
+                        <h3>${suggestion.name}</h3>
+                        <span class="user-type">${roleIcons[suggestion.role]} ${suggestion.role.charAt(0).toUpperCase() + suggestion.role.slice(1)}</span>
+                    </div>
+                </div>
+                <span class="status-badge" style="background: ${statusColors[suggestion.status]}; color: white;">
+                    ${statusIcons[suggestion.status]} ${suggestion.status.charAt(0).toUpperCase() + suggestion.status.slice(1)}
+                </span>
+            </div>
+            
+            <div class="card-body">
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">${suggestion.email}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Category</div>
+                    <div class="info-value">${categoryIcons[suggestion.category]} ${suggestion.category.charAt(0).toUpperCase() + suggestion.category.slice(1)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Submitted On</div>
+                    <div class="info-value">${submittedDate}</div>
+                </div>
+                ${reviewedDate ? `
+                <div class="info-item">
+                    <div class="info-label">Reviewed On</div>
+                    <div class="info-value">${reviewedDate}</div>
+                </div>
+                ` : ''}
+            </div>
+            
+            <div class="card-documents">
+                <h4>💡 Suggestion</h4>
+                <p style="color: #666; line-height: 1.6; margin-top: 0.8rem; padding: 1rem; background: rgba(102,126,234,0.05); border-radius: 10px;">
+                    ${suggestion.suggestion}
+                </p>
+            </div>
+            
+            ${suggestion.adminComment ? `
+            <div class="card-documents">
+                <h4>💬 Admin Comment</h4>
+                <p style="color: #666; line-height: 1.6; margin-top: 0.8rem; padding: 1rem; background: rgba(255,193,7,0.1); border-radius: 10px;">
+                    ${suggestion.adminComment}
+                </p>
+            </div>
+            ` : ''}
+            
+            <div class="card-actions">
+                <button class="action-btn btn-view" onclick="openSuggestionModal('${suggestion._id || suggestion.id}')">
+                    👁️ Review
+                </button>
+                <button class="action-btn btn-reject" onclick="deleteSuggestion('${suggestion._id || suggestion.id}')">
+                    🗑️ Delete
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Open suggestion review modal
+function openSuggestionModal(suggestionId) {
+    currentSuggestion = allSuggestions.find(s => (s._id || s.id) === suggestionId);
+    if (!currentSuggestion) return;
+    
+    const modal = document.getElementById('suggestionReviewModal');
+    const modalTitle = document.getElementById('suggestionModalTitle');
+    const suggestionDetails = document.getElementById('suggestionDetails');
+    
+    modalTitle.textContent = `Review Suggestion - ${currentSuggestion.name}`;
+    
+    const categoryNames = {
+        academic: 'Academic Programs',
+        facilities: 'Facilities & Infrastructure',
+        staff: 'Staff & Teaching',
+        transport: 'Transportation',
+        events: 'Events & Activities',
+        other: 'Other'
+    };
+    
+    suggestionDetails.innerHTML = `
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+            <div style="margin-bottom: 1rem;">
+                <strong style="color: #667eea;">Name:</strong> ${currentSuggestion.name}<br>
+                <strong style="color: #667eea;">Role:</strong> ${currentSuggestion.role.charAt(0).toUpperCase() + currentSuggestion.role.slice(1)}<br>
+                <strong style="color: #667eea;">Email:</strong> ${currentSuggestion.email}<br>
+                <strong style="color: #667eea;">Category:</strong> ${categoryNames[currentSuggestion.category]}<br>
+                <strong style="color: #667eea;">Status:</strong> ${currentSuggestion.status.charAt(0).toUpperCase() + currentSuggestion.status.slice(1)}
+            </div>
+            <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #667eea;">
+                <strong style="color: #667eea; display: block; margin-bottom: 0.5rem;">Suggestion:</strong>
+                <p style="color: #333; line-height: 1.6; margin: 0;">${currentSuggestion.suggestion}</p>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('suggestionAdminComment').value = currentSuggestion.adminComment || '';
+    
+    modal.classList.add('show');
+}
+
+// Close suggestion modal
+function closeSuggestionModal() {
+    document.getElementById('suggestionReviewModal').classList.remove('show');
+    currentSuggestion = null;
+}
+
+// Update suggestion status
+async function updateSuggestionStatus(status) {
+    if (!currentSuggestion) return;
+    
+    const comment = document.getElementById('suggestionAdminComment').value.trim();
+    
+    try {
+        const suggestionId = currentSuggestion._id || currentSuggestion.id;
+        
+        await apiRequest(`${API_ENDPOINTS.suggestions}/${suggestionId}/status`, {
+            method: 'PUT',
+            body: JSON.stringify({ status, adminComment: comment })
+        });
+        
+        // Update local data
+        const index = allSuggestions.findIndex(s => (s._id || s.id) === suggestionId);
+        if (index !== -1) {
+            allSuggestions[index].status = status;
+            if (comment) allSuggestions[index].adminComment = comment;
+            allSuggestions[index].reviewedAt = new Date().toISOString();
+        }
+        
+        closeSuggestionModal();
+        updateSuggestionsStats();
+        renderSuggestions();
+        
+        const statusMessages = {
+            important: 'marked as important',
+            ignored: 'ignored',
+            draft: 'marked as draft'
+        };
+        
+        showToast(`Suggestion ${statusMessages[status]} successfully!`, 'success');
+    } catch (error) {
+        console.error('Error updating suggestion status:', error);
+        showToast('Failed to update suggestion: ' + error.message, 'error');
+    }
+}
+
+// Delete suggestion
+async function deleteSuggestion(suggestionId) {
+    if (!confirm('Are you sure you want to delete this suggestion? This action cannot be undone.')) return;
+    
+    try {
+        await apiRequest(`${API_ENDPOINTS.suggestions}/${suggestionId}`, {
+            method: 'DELETE'
+        });
+        
+        allSuggestions = allSuggestions.filter(s => (s._id || s.id) !== suggestionId);
+        updateSuggestionsStats();
+        renderSuggestions();
+        showToast('Suggestion deleted successfully!', 'success');
+    } catch (error) {
+        console.error('Error deleting suggestion:', error);
+        showToast('Failed to delete suggestion: ' + error.message, 'error');
+    }
+}
+
+// ===================================
+// CONTACT MESSAGES FUNCTIONS
+// ===================================
+
+async function loadContacts() {
+    const container = document.getElementById('contactsContainer');
+    try {
+        console.log('🔄 Fetching contact messages...');
+        const data = await apiRequest(API_ENDPOINTS.contacts);
+        allContacts = data.contacts || data.data || [];
+        console.log('📥 Contact messages loaded:', allContacts.length);
+        updateContactsStats();
+        renderContacts();
+    } catch (error) {
+        console.error('❌ Error loading contact messages:', error);
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">⚠️</div>
+                <h3>Error Loading Messages</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+function updateContactsStats() {
+    document.getElementById('newMessagesCount').textContent = allContacts.filter(c => c.status === 'new').length;
+    document.getElementById('readMessagesCount').textContent = allContacts.filter(c => c.status === 'read').length;
+    document.getElementById('repliedMessagesCount').textContent = allContacts.filter(c => c.status === 'replied').length;
+    document.getElementById('totalMessagesCount').textContent = allContacts.length;
+}
+
+function filterContacts(filter, element) {
+    currentContactFilter = filter;
+    
+    // Scope to contacts tab only
+    const contactsTab = document.getElementById('contactsTab');
+    if (contactsTab) {
+        contactsTab.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+    }
+    
+    element.classList.add('active');
+    renderContacts();
+}
+
+function searchContacts() {
+    renderContacts();
+}
+
+function renderContacts() {
+    const container = document.getElementById('contactsContainer');
+    const searchTerm = document.getElementById('contactsSearchInput').value.toLowerCase();
+    let filtered = allContacts;
+    
+    if (currentContactFilter !== 'all') {
+        filtered = filtered.filter(c => c.status === currentContactFilter);
+    }
+    
+    if (searchTerm) {
+        filtered = filtered.filter(c => 
+            c.name.toLowerCase().includes(searchTerm) ||
+            c.email.toLowerCase().includes(searchTerm) ||
+            (c.subject && c.subject.toLowerCase().includes(searchTerm)) ||
+            c.message.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>No Messages Found</h3>
+                <p>There are no contact messages matching your criteria.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const sorted = [...filtered].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    container.innerHTML = sorted.map(contact => createContactCard(contact)).join('');
+}
+
+function createContactCard(contact) {
+    const statusColors = { new: '#17a2b8', read: '#ffc107', replied: '#28a745' };
+    const statusIcons = { new: '📬', read: '👁️', replied: '✅' };
+    const receivedDate = new Date(contact.createdAt).toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    
+    return `
+        <div class="registration-card" style="border-top: 5px solid ${statusColors[contact.status]};" data-id="${contact._id || contact.id}">
+            <div class="card-header">
+                <div class="user-info">
+                    <div class="user-photo">${contact.name.charAt(0)}</div>
+                    <div class="user-details">
+                        <h3>${contact.name}</h3>
+                        <span class="user-type">📧 Contact Message</span>
+                    </div>
+                </div>
+                <span class="status-badge" style="background: ${statusColors[contact.status]}; color: white;">
+                    ${statusIcons[contact.status]} ${contact.status.charAt(0).toUpperCase() + contact.status.slice(1)}
+                </span>
+            </div>
+            
+            <div class="card-body">
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">
+                        <a href="mailto:${contact.email}" style="color: #667eea; text-decoration: none;">${contact.email}</a>
+                    </div>
+                </div>
+                ${contact.phone ? `
+                <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">
+                        <a href="tel:${contact.phone}" style="color: #667eea; text-decoration: none;">${contact.phone}</a>
+                    </div>
+                </div>` : ''}
+                ${contact.subject ? `
+                <div class="info-item">
+                    <div class="info-label">Subject</div>
+                    <div class="info-value">${contact.subject}</div>
+                </div>` : ''}
+                <div class="info-item">
+                    <div class="info-label">Received On</div>
+                    <div class="info-value">${receivedDate}</div>
+                </div>
+            </div>
+            
+            <div class="card-documents">
+                <h4>💬 Message</h4>
+                <p style="color: #666; line-height: 1.6; margin-top: 0.8rem; padding: 1rem; background: rgba(102,126,234,0.05); border-radius: 10px; white-space: pre-wrap;">${contact.message}</p>
+            </div>
+            
+            <div class="card-actions">
+                <button class="action-btn btn-view" onclick="openContactModal('${contact._id || contact.id}')">
+                    👁️ View Details
+                </button>
+                ${contact.status === 'new' ? `
+                <button class="action-btn" onclick="markContactAsRead('${contact._id || contact.id}')" style="background: #17a2b8; color: white;">
+                    👁️ Mark as Read
+                </button>` : ''}
+                ${contact.status !== 'replied' ? `
+                <button class="action-btn btn-approve" onclick="markContactAsReplied('${contact._id || contact.id}')">
+                    ✅ Mark as Replied
+                </button>` : ''}
+                <button class="action-btn btn-reject" onclick="deleteContact('${contact._id || contact.id}')">
+                    🗑️ Delete
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function openContactModal(contactId) {
+    currentContact = allContacts.find(c => (c._id || c.id) === contactId);
+    if (!currentContact) return;
+    
+    const modal = document.getElementById('contactReviewModal');
+    const modalTitle = document.getElementById('contactModalTitle');
+    const contactDetails = document.getElementById('contactDetails');
+    
+    modalTitle.textContent = `Contact Message - ${currentContact.name}`;
+    
+    const receivedDate = new Date(currentContact.createdAt).toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    
+    contactDetails.innerHTML = `
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+            <div style="margin-bottom: 1rem;">
+                <strong style="color: #667eea;">Name:</strong> ${currentContact.name}<br>
+                <strong style="color: #667eea;">Email:</strong> 
+                <a href="mailto:${currentContact.email}" style="color: #667eea;">${currentContact.email}</a><br>
+                ${currentContact.phone ? `<strong style="color: #667eea;">Phone:</strong> 
+                <a href="tel:${currentContact.phone}" style="color: #667eea;">${currentContact.phone}</a><br>` : ''}
+                ${currentContact.subject ? `<strong style="color: #667eea;">Subject:</strong> ${currentContact.subject}<br>` : ''}
+                <strong style="color: #667eea;">Status:</strong> ${currentContact.status.charAt(0).toUpperCase() + currentContact.status.slice(1)}<br>
+                <strong style="color: #667eea;">Received:</strong> ${receivedDate}
+            </div>
+            <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #667eea;">
+                <strong style="color: #667eea; display: block; margin-bottom: 0.5rem;">Message:</strong>
+                <p style="color: #333; line-height: 1.6; margin: 0; white-space: pre-wrap;">${currentContact.message}</p>
+            </div>
+        </div>
+    `;
+    
+    modal.classList.add('show');
+}
+
+function closeContactModal() {
+    document.getElementById('contactReviewModal').classList.remove('show');
+    currentContact = null;
+}
+
+async function updateContactStatus(status) {
+    if (!currentContact) return;
+    try {
+        const contactId = currentContact._id || currentContact.id;
+        await apiRequest(`${API_ENDPOINTS.contacts}/${contactId}/status`, {
+            method: 'PUT',
+            body: JSON.stringify({ status })
+        });
+        const index = allContacts.findIndex(c => (c._id || c.id) === contactId);
+        if (index !== -1) allContacts[index].status = status;
+        closeContactModal();
+        updateContactsStats();
+        renderContacts();
+        const statusMessages = { read: 'marked as read', replied: 'marked as replied' };
+        showToast(`Message ${statusMessages[status]} successfully!`, 'success');
+    } catch (error) {
+        console.error('Error updating contact status:', error);
+        showToast('Failed to update message: ' + error.message, 'error');
+    }
+}
+
+async function markContactAsRead(contactId) {
+    currentContact = allContacts.find(c => (c._id || c.id) === contactId);
+    if (!currentContact) return;
+    await updateContactStatus('read');
+}
+
+async function markContactAsReplied(contactId) {
+    currentContact = allContacts.find(c => (c._id || c.id) === contactId);
+    if (!currentContact) return;
+    await updateContactStatus('replied');
+}
+
+async function deleteContact(contactId = null) {
+    const idToDelete = contactId || (currentContact ? (currentContact._id || currentContact.id) : null);
+    if (!idToDelete) return;
+    if (!confirm('Are you sure you want to delete this message? This action cannot be undone.')) return;
+    
+    try {
+        await apiRequest(`${API_ENDPOINTS.contacts}/${idToDelete}`, { method: 'DELETE' });
+        allContacts = allContacts.filter(c => (c._id || c.id) !== idToDelete);
+        if (document.getElementById('contactReviewModal').classList.contains('show')) {
+            closeContactModal();
+        }
+        updateContactsStats();
+        renderContacts();
+        showToast('Message deleted successfully!', 'success');
+    } catch (error) {
+        console.error('Error deleting contact:', error);
+        showToast('Failed to delete message: ' + error.message, 'error');
+    }
+}
+
+/* ===== Sub-tab switching (Suggestions & Contacts) ===== */
+function switchSubTab(containerId, contentId, button) {
+
+    // 1. Get parent container
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // 2. Remove active class from all buttons
+    container.querySelectorAll('.sub-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // 3. Hide all sub-tab contents
+    container.querySelectorAll('.sub-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 4. Activate clicked button
+    button.classList.add('active');
+
+    // 5. Show selected content
+    const target = document.getElementById(contentId);
+    if (target) target.classList.add('active');
+}
+
+</script>
+</body>
+</html>

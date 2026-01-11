@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Light - School Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            animation: rotate 3s infinite ease-in-out;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        .logo-text h2 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Main Container */
+        .container {
+            padding: 8rem 3rem 3rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .welcome-banner h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .welcome-banner p {
+            color: #666;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            animation: scaleIn 0.5s ease;
+            animation-fill-mode: backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Info Card */
+        .info-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInLeft 0.8s ease;
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .info-card h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .info-item:hover {
+            background: #667eea10;
+            transform: translateX(10px);
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+            min-width: 30px;
+        }
+
+        .info-content h3 {
+            color: #333;
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+        }
+
+        .info-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Facilities Grid */
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .facility-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .facility-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.85);
+            transition: all 0.3s;
+            z-index: 1;
+        }
+
+        .facility-item:hover::before {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+        }
+
+        .facility-item:hover {
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .facility-item > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .facility-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Schedule Section */
+        .schedule-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            animation: fadeInRight 0.8s ease;
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .schedule-card h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .schedule-table th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .schedule-table th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        .schedule-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .schedule-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Suggestion Box */
+        .suggestion-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .suggestion-box h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1.2rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            display: none;
+            animation: slideInRight 0.4s ease;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(500px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.show {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toast.success {
+            border-left: 5px solid #28a745;
+        }
+
+        .toast.error {
+            border-left: 5px solid #dc3545;
+        }
+
+        .toast.warning {
+            border-left: 5px solid #ffc107;
+        }
+
+        .toast-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+        }
+
+        .toast-message {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 8rem 1.5rem 2rem;
+            }
+
+            .welcome-banner h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .facilities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .schedule-table {
+                font-size: 0.9rem;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 0.7rem;
+            }
+
+            .toast {
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="logo">
+            <div class="logo-icon">🎓</div>
+            <div class="logo-text">
+                <h2>STAR LIGHT PUBLIC ENGLISH SCHOOL</h2>
+                <p>School Dashboard</p>
+            </div>
+        </div>
+        <button class="nav-btn" onclick="history.back()">🏠 Home</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h1>📊 School Dashboard Overview</h1>
+            <p>Welcome to Star Light Public English School - Comprehensive Statistics & Information</p>
+        </div>
+
+        <!-- Statistics Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">1,247</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🇬🇧</div>
+                <div class="stat-number">847</div>
+                <div class="stat-label">English Medium</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🇮🇳</div>
+                <div class="stat-number">400</div>
+                <div class="stat-label">Hindi Medium</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">RTE Students</div>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="two-column">
+            <!-- Address & Contact -->
+            <div class="info-card">
+                <h2>📍 Address & Contact</h2>
+                
+                <div class="info-item">
+                    <div class="info-icon">🏫</div>
+                    <div class="info-content">
+                        <h3>School Address</h3>
+                        <p>Star Light Public English School<br>
+                        Gandhi Chawk Road, Barigarh<br>
+                        Chhatarpur, Madhya Pradesh 471510</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">📞</div>
+                    <div class="info-content">
+                        <h3>Phone Numbers</h3>
+                        <p>Main Office: +91 9977642890<br>
+                        Admissions: +91 7691911558<br>
+                        WhatsApp: +91 9977642890</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">✉️</div>
+                    <div class="info-content">
+                        <h3>Email</h3>
+                        <p>starlight471510@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">🕒</div>
+                    <div class="info-content">
+                        <h3>Office Hours</h3>
+                        <p>Monday - Friday: 8:00 AM - 2:00 PM<br>
+                        Saturday: 8:00 AM - 1:00 PM<br>
+                        Sunday: Closed</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Facilities -->
+            <div class="info-card">
+                <h2>🏢 School Facilities</h2>
+                <div class="facilities-grid">
+                    <div class="facility-item">
+                        <div class="facility-icon">📚</div>
+                        <p><strong>Library</strong><br>15,000+ Books</p>
+                    </div>
+                    <div class="facility-item">
+                        <div class="facility-icon">🔬</div>
+                        <p><strong>Science Lab</strong><br>Modern Equipment</p>
+                    </div>
+                    <div class="facility-item">
+                        <div class="facility-icon">💻</div>
+                        <p><strong>Computer Lab</strong><br>50+ Systems</p>
+                    </div>
+                    <div class="facility-item">
+                        <div class="facility-icon">🏀</div>
+                        <p><strong>Sports Ground</strong><br>Multiple Sports</p>
+                    </div>
+                    <div class="facility-item">
+                        <div class="facility-icon">🎨</div>
+                        <p><strong>Art Room</strong><br>Creative Space</p>
+                    </div>
+                    <div class="facility-item">
+                        <div class="facility-icon">🎵</div>
+                        <p><strong>Music Room</strong><br>Instruments</p>
+                    </div>
+                    <div class="facility-item">
+                        <div class="facility-icon">🚌</div>
+                        <p><strong>Transport</strong><br>Safe Routes</p>
+                    </div>
+                    <div class="facility-item">
+                        <div class="facility-icon">🏥</div>
+                        <p><strong>Medical Room</strong><br>First Aid</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- School Schedule -->
+        <div class="schedule-card">
+            <h2>📅 School Schedule</h2>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Timing</th>
+                        <th>Classes</th>
+                        <th>Activities</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Monday</strong></td>
+                        <td>8:00 AM - 2:00 PM</td>
+                        <td>Regular Classes</td>
+                        <td>Morning Assembly, Sports</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tuesday</strong></td>
+                        <td>8:00 AM - 2:00 PM</td>
+                        <td>Regular Classes</td>
+                        <td>Art & Craft, Music</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Wednesday</strong></td>
+                        <td>8:00 AM - 2:00 PM</td>
+                        <td>Regular Classes</td>
+                        <td>Computer Lab, Library</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thursday</strong></td>
+                        <td>8:00 AM - 2:00 PM</td>
+                        <td>Regular Classes</td>
+                        <td>Science Lab, Dance</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Friday</strong></td>
+                        <td>8:00 AM - 2:00 PM</td>
+                        <td>Regular Classes</td>
+                        <td>Sports Day, Club Activities</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Saturday</strong></td>
+                        <td>8:00 AM - 1:00 PM</td>
+                        <td>Half Day</td>
+                        <td>Co-curricular Activities</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sunday</strong></td>
+                        <td>-</td>
+                        <td>Holiday</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Suggestion Box -->
+        <div class="suggestion-box">
+            <h2>💡 Suggestion Box</h2>
+            <p style="color: #666; margin-bottom: 2rem;">We value your feedback! Share your suggestions to help us improve.</p>
+            
+            <form id="suggestionForm" onsubmit="handleSuggestion(event)">
+                <div class="form-group">
+                    <label>Your Name *</label>
+                    <input type="text" id="suggestionName" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Role *</label>
+                    <select id="suggestionRole" required>
+                        <option value="">Select Role</option>
+                        <option value="parent">Parent</option>
+                        <option value="student">Student</option>
+                        <option value="staff">Staff Member</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="suggestionEmail" placeholder="your.email@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="suggestionCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="academic">Academic Programs</option>
+                        <option value="facilities">Facilities & Infrastructure</option>
+                        <option value="staff">Staff & Teaching</option>
+                        <option value="transport">Transportation</option>
+                        <option value="events">Events & Activities</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Suggestion *</label>
+                    <textarea id="suggestionText" placeholder="Share your valuable suggestion here..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="btnText">Submit Suggestion 📨</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon" id="toastIcon"></div>
+        <div class="toast-content">
+            <div class="toast-title" id="toastTitle"></div>
+            <div class="toast-message" id="toastMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // API CONFIGURATION
+        // ==========================================
+        const API_CONFIG = {
+            BASE_URL: window.location.origin + '/api',
+            ENDPOINTS: {
+                SUGGESTIONS: '/suggestions'
+            }
+        };
+
+        // ==========================================
+        // UTILITY FUNCTIONS
+        // ==========================================
+
+        /**
+         * Show toast notification
+         */
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            toastIcon.textContent = icons[type] || icons.info;
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        /**
+         * Validate email format
+         */
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        /**
+         * Validate form data
+         */
+        function validateFormData(data) {
+            const errors = [];
+
+            if (!data.name || data.name.trim().length < 2) {
+                errors.push('Name must be at least 2 characters long');
+            }
+
+            if (!data.email || !isValidEmail(data.email)) {
+                errors.push('Please enter a valid email address');
+            }
+
+            if (!data.role) {
+                errors.push('Please select your role');
+            }
+
+            if (!data.category) {
+                errors.push('Please select a category');
+            }
+
+            if (!data.suggestion || data.suggestion.trim().length < 10) {
+                errors.push('Suggestion must be at least 10 characters long');
+            }
+
+            return errors;
+        }
+
+        /**
+         * Reset form
+         */
+        function resetForm() {
+            document.getElementById('suggestionForm').reset();
+        }
+
+        // ==========================================
+        // SUGGESTION FORM HANDLER
+        // ==========================================
+
+        /**
+         * Handle suggestion form submission
+         */
+        async function handleSuggestion(event) {
+            event.preventDefault();
+            console.log('Form submitted!');
+
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const originalBtnContent = btnText.innerHTML;
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('suggestionName').value.trim(),
+                email: document.getElementById('suggestionEmail').value.trim(),
+                role: document.getElementById('suggestionRole').value,
+                category: document.getElementById('suggestionCategory').value,
+                suggestion: document.getElementById('suggestionText').value.trim()
+            };
+
+            console.log('Form data collected:', formData);
+
+            // Validate form data
+            const errors = validateFormData(formData);
+            if (errors.length > 0) {
+                console.log('Validation errors:', errors);
+                showToast('Validation Error', errors.join('. '), 'error');
+                return;
+            }
+
+            console.log('Validation passed');
+
+            // Disable submit button and show loading
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span> Submitting...';
+
+            try {
+                const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.SUGGESTIONS}`;
+                console.log('Submitting to URL:', url);
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                console.log('Response received. Status:', response.status);
+
+                if (!response.ok) {
+                    let errorData;
+                    try {
+                        errorData = await response.json();
+                    } catch (e) {
+                        errorData = { message: `Server error: ${response.status}` };
+                    }
+                    console.error('Error response:', errorData);
+                    throw new Error(errorData.message || errorData.msg || `Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Success! Response data:', data);
+
+                // Show success message
+                showToast(
+                    'Success!',
+                    'Your suggestion has been submitted successfully. Thank you for your feedback!',
+                    'success'
+                );
+
+                // Reset form
+                resetForm();
+
+            } catch (error) {
+                console.error('Caught error:', error);
+                console.error('Error message:', error.message);
+                console.error('Error stack:', error.stack);
+                
+                // Show error message
+                showToast(
+                    'Submission Failed',
+                    error.message || 'Failed to submit suggestion. Please check your connection and try again.',
+                    'error'
+                );
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                btnText.innerHTML = originalBtnContent;
+                console.log('Form submission complete');
+            }
+        }
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+
+        console.log('Script loaded!');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded!');
+            console.log('API Base URL:', API_CONFIG.BASE_URL);
+
+            // Test if form exists
+            const form = document.getElementById('suggestionForm');
+            console.log('Form found:', form ? 'Yes' : 'No');
+
+            // Add form input animations
+            const inputs = document.querySelectorAll('input, textarea, select');
+            console.log('Input fields found:', inputs.length);
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.01)';
+                });
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+
+            console.log('Dashboard initialized successfully!');
+        });
+    </script>
+</body>
+</html>
